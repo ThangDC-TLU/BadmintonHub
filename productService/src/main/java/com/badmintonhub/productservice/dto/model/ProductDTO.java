@@ -1,9 +1,6 @@
 package com.badmintonhub.productservice.dto.model;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.List;
@@ -12,8 +9,6 @@ import java.util.Set;
 
 @Data
 public class ProductDTO {
-    private Long id;
-
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, message = "Product name should have at least 2 characters!")
     private String name;
@@ -34,9 +29,10 @@ public class ProductDTO {
 
     @NotEmpty(message = "thumbnail should not be empty")
     private String thumbnailUrl;
-    private int reviewCount;
-    private double ratingAverage;
-    private int quantitySold;
+
+    @PositiveOrZero(message = "Quantity stock must be zero or positive")
+    private int quantityStock;
+
     private String productSlug;
     private String categoryUrl;
 

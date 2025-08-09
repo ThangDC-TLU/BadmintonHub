@@ -24,8 +24,19 @@ public class CategoryMapper {
         return category;
     }
 
-    public CategoryResponseDTO mapToResponse(Category category){
-        CategoryResponseDTO categoryResponseDTO = modelMapper.map(category, CategoryResponseDTO.class);
-        return categoryResponseDTO;
+    public CategoryResponseDTO mapToResponse(Category category) {
+        CategoryResponseDTO dto = new CategoryResponseDTO();
+        dto.setId(category.getId());
+        dto.setName(category.getName());
+        dto.setUrlKey(category.getUrlKey());
+        dto.setThumbnailUrl(category.getThumbnailUrl());
+
+        // Tránh lỗi đệ quy
+        if (category.getParent() != null) {
+            dto.setParentId(category.getParent().getId());
+        }
+
+        return dto;
     }
+
 }

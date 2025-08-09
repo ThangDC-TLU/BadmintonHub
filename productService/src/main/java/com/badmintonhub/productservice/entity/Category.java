@@ -27,7 +27,15 @@ public class Category {
     private String urlKey;
 
     private String thumbnailUrl;
-    private Long parentId;
+
+    // Quan hệ đệ quy: Category cha
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Category parent;
+
+    // Quan hệ đệ quy: Danh sách con
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private Set<Category> children = new HashSet<>();
 
     @OneToMany(mappedBy = "category")
     private Set<Product> products = new HashSet<>();

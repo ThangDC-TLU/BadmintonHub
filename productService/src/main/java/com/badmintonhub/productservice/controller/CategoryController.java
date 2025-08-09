@@ -7,6 +7,7 @@ import com.badmintonhub.productservice.entity.Category;
 import com.badmintonhub.productservice.service.CategoryService;
 import com.badmintonhub.productservice.utils.anotation.ApiMessage;
 import com.turkraft.springfilter.boot.Filter;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class CategoryController {
 
     @PostMapping
     @ApiMessage("Create a category")
-    public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryResponseDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.categoryService.creatCategory(categoryDTO));
     }
 
@@ -49,7 +50,7 @@ public class CategoryController {
     @ApiMessage("Update category")
     public ResponseEntity<CategoryResponseDTO> updateCategory(
             @PathVariable("categoryId") Long id,
-            @RequestBody CategoryDTO categoryDTO
+            @Valid @RequestBody CategoryDTO categoryDTO
     ) {
         CategoryResponseDTO updatedCategory = categoryService.updateCategory(id, categoryDTO);
         return ResponseEntity.ok(updatedCategory);

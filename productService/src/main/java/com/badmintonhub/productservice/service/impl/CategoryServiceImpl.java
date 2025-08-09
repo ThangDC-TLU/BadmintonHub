@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,15 +28,25 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
     }
     @Override
+    @Transactional
     public CategoryResponseDTO creatCategory(CategoryDTO categoryDTO) {
-        Category category = this.categoryMapper.mapToEntity(categoryDTO);
+        Category category = new Category();
+        category.setName(categoryDTO.getName());
+        category.setUrlKey(SlugConvert.convert(categoryDTO.getName()));
+        category.setThumbnailUrl(categoryDTO.getThumbnailUrl());
 
-        category.setUrlKey(SlugConvert.convert(category.getName()));
+        // Nếu có parentId → tìm Category cha rồi set vào
+        if (categoryDTO.getParentId() != null) {
+            Category parentCategory = categoryRepository.findById(categoryDTO.getParentId())
+                    .orElseThrow(() -> new RuntimeException("Parent category not found with id: " + categoryDTO.getParentId()));
+            category.setParent(parentCategory);
+        }
 
-        Category categoryRes = this.categoryRepository.save(category);
+        Category saved = categoryRepository.save(category);
 
-        return this.categoryMapper.mapToResponse(categoryRes);
+        return this.categoryMapper.mapToResponse(saved);
     }
+
 
     @Override
     public ObjectResponse getAllCategories(Specification<Category> specification, Pageable pageable) {
@@ -68,13 +79,26 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryResponseDTO updateCategory(Long id, CategoryDTO categoryDTO) {
-        Category category = this.categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+        Category category = this.categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
         category.setName(categoryDTO.getName());
         category.setUrlKey(SlugConvert.convert(categoryDTO.getName()));
         category.setThumbnailUrl(categoryDTO.getThumbnailUrl());
-        category.setParentId(categoryDTO.getParentId());
+
+        if (categoryDTO.getParentId() != null) {
+            if (categoryDTO.getParentId().equals(id)) {
+                throw new IllegalArgumentException("A category cannot be its own parent.");
+            }
+
+            Category parentCategory = categoryRepository.findById(categoryDTO.getParentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category", "parentId", categoryDTO.getParentId()));
+            category.setParent(parentCategory);
+        } else {
+            category.setParent(null);
+        }
 
         Category categoryRes = this.categoryRepository.save(category);
         return this.categoryMapper.mapToResponse(categoryRes);

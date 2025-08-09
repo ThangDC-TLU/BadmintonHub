@@ -35,6 +35,7 @@ public class Product {
     private int reviewCount;
     private double ratingAverage;
     private int quantitySold;
+    private int quantityStock;
     private String productSlug;
     private String categoryUrl;
 

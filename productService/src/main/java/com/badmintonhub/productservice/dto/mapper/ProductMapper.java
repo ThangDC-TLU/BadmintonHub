@@ -25,9 +25,9 @@ public class ProductMapper {
         return productDTO;
     }
 
-    public Product mapToResponseEntity(ProductResponseDTO productResponseDTO){
-        Product product = mapper.map(productResponseDTO, Product.class);
-        return product;
+    public ProductResponseDTO mapToResponse(Product product){
+        ProductResponseDTO productRes = mapper.map(product, ProductResponseDTO.class);
+        return productRes;
     }
 
 }
