@@ -36,7 +36,10 @@ public class Product {
     private double ratingAverage;
     private int quantitySold;
     private int quantityStock;
+
+    @Column(unique = true)
     private String productSlug;
+
     private String categoryUrl;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
@@ -53,6 +56,7 @@ public class Product {
     // Cac ham xu ly logic cua product option
     public void addOption(ProductOption option){
         option.setProduct(this);
+        options.add(option);
     }
 
     public void updateOption(ProductOption option){

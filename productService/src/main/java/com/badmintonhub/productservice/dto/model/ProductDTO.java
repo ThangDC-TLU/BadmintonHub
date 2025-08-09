@@ -9,6 +9,8 @@ import java.util.Set;
 
 @Data
 public class ProductDTO {
+    private Long id;
+
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, message = "Product name should have at least 2 characters!")
     private String name;
@@ -29,10 +31,10 @@ public class ProductDTO {
 
     @NotEmpty(message = "thumbnail should not be empty")
     private String thumbnailUrl;
-
-    @PositiveOrZero(message = "Quantity stock must be zero or positive")
+    private int reviewCount;
+    private double ratingAverage;
     private int quantityStock;
-
+    private int quantitySold;
     private String productSlug;
     private String categoryUrl;
 

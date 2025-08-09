@@ -25,7 +25,7 @@ public class ProductOption {
     @Column(unique = false)
     private String name;
     private String value;
-    private double  addPrice;
+    private double addPrice;
     private double subPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)

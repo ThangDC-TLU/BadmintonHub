@@ -13,6 +13,18 @@ public class ProductMapper {
 
     public ProductMapper(ModelMapper mapper) {
         this.mapper = mapper;
+
+        // Cấu hình mapping ProductDTO → Product
+        this.mapper.typeMap(ProductDTO.class, Product.class).addMappings(m -> {
+            m.skip(Product::setOptions);
+            m.skip(Product::setSpecifications);
+        });
+
+        // Nếu cần, bạn cũng có thể cấu hình chiều ngược lại Product → ProductDTO
+        this.mapper.typeMap(Product.class, ProductDTO.class).addMappings(m -> {
+            m.skip(ProductDTO::setOptions);
+            m.skip(ProductDTO::setSpecifications);
+        });
     }
 
     public Product mapToEntity(ProductDTO productDTO){
