@@ -60,8 +60,7 @@ public class Product {
     }
 
     public void updateOption(ProductOption option){
-        option.setProduct(this);
-        options.add(option);
+
     }
 
 

@@ -69,4 +69,15 @@ public class GlobalException  {
         response.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(response);
     }
+
+    @ExceptionHandler(value = {
+            IdInvalidException.class
+    })
+    public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
+        RestResponse<Object> response = new RestResponse<>();
+        response.setError("Exception occurs...");
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+    }
 }
