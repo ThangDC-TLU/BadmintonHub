@@ -1,15 +1,15 @@
-package com.badmintonhub.authservice.controller;
+package com.badmintonhub.userservice.controller;
 
 
 
-import com.badmintonhub.authservice.dto.message.ObjectResponse;
-import com.badmintonhub.authservice.dto.model.UserDTO;
-import com.badmintonhub.authservice.dto.model.UserUpdateDTO;
-import com.badmintonhub.authservice.entity.User;
-import com.badmintonhub.authservice.exception.APIException;
-import com.badmintonhub.authservice.service.UserService;
-import com.badmintonhub.authservice.utils.CustomHeaders;
-import com.badmintonhub.authservice.utils.anotation.ApiMessage;
+import com.badmintonhub.userservice.dto.message.ObjectResponse;
+import com.badmintonhub.userservice.dto.model.UserDTO;
+import com.badmintonhub.userservice.dto.model.UserUpdateDTO;
+import com.badmintonhub.userservice.entity.User;
+import com.badmintonhub.userservice.exception.APIException;
+import com.badmintonhub.userservice.service.UserService;
+import com.badmintonhub.userservice.utils.CustomHeaders;
+import com.badmintonhub.userservice.utils.anotation.ApiMessage;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
