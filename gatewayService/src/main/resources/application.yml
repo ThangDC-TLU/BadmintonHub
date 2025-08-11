@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: GATEWAY-SERVICE
+  cloud:
+    gateway:
+      routes:
+        - id: PRODUCT-SERVICE
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/products/**
+        - id: USER-SERVICE
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/users/**
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
