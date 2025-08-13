@@ -19,7 +19,7 @@ spring:
   security:
     oauth2:
       authorizationserver:
-        issuer: http://localhost:8082 # 👈 Thêm issuerUri tại đây
+        issuer: http://localhost:8082
 
 eureka:
   client:
