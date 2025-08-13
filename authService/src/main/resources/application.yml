@@ -1,18 +1,27 @@
 server:
-  port: 9000
+  port: 8082
 
 spring:
   application:
     name: auth-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/auth_db
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:8082 # 👈 Thêm issuerUri tại đây
+
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
-
-

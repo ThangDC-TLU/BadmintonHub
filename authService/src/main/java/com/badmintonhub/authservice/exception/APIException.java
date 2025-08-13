@@ -1,0 +1,7 @@
+package com.badmintonhub.authservice.exception;
+
+public class APIException extends Exception {
+    public APIException(String message) {
+        super(message);
+    }
+}
