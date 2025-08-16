@@ -58,7 +58,8 @@ public class AuthorizationServerConfiguration {
     private final UserDetailsService userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
 
-    public AuthorizationServerConfiguration(UserDetailsService userDetailsService, AuthenticationConfiguration authenticationConfiguration) {
+    public AuthorizationServerConfiguration(UserDetailsService userDetailsService,
+                                            AuthenticationConfiguration authenticationConfiguration) {
         this.userDetailsService = userDetailsService;
         this.authenticationConfiguration = authenticationConfiguration;
     }
@@ -68,79 +69,67 @@ public class AuthorizationServerConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    // Cấu hình AuthenticationProvider cho xác thực username/password từ DB
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        authenticationProvider.setUserDetailsService(userDetailsService); // Lấy user từ DB
+        authenticationProvider.setPasswordEncoder(passwordEncoder()); // So sánh mật khẩu đã mã hóa
         return authenticationProvider;
     }
 
+    // Tạo AuthenticationManager để xử lý đăng nhập
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        return http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
-                        .requestMatchers(
-                                "/actuator/**",
-                                "/signup",
-                                "/register",
-                                "/api/v1/users/**",
-                                "/api/v1/address/**",
-                                "/api/v1/auth/**")
-                        .permitAll()
-
-                        .anyRequest().authenticated()
-
-                )
-                .formLogin(Customizer.withDefaults())
-                .build();
-    }
-
+    // Cấu hình các endpoint OAuth2 (token, authorize, introspect, revoke...)
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer(issuerUri)
+                .issuer(issuerUri) // Địa chỉ định danh của server
                 .authorizationEndpoint("/oauth2/v1/authorize")
                 .deviceAuthorizationEndpoint("/oauth2/v1/device_authorization")
                 .deviceVerificationEndpoint("/oauth2/v1/device_verification")
-                .tokenEndpoint("/oauth2/v1/token")
+                .tokenEndpoint("/oauth2/v1/token") // Nơi client lấy token
                 .tokenIntrospectionEndpoint("/oauth2/v1/introspect")
                 .tokenRevocationEndpoint("/oauth2/v1/revoke")
-                .jwkSetEndpoint("/oauth2/v1/jwks")
+                .jwkSetEndpoint("/oauth2/v1/jwks") // Cung cấp public key để verify JWT
                 .oidcLogoutEndpoint("/connect/v1/logout")
                 .oidcUserInfoEndpoint("/connect/v1/userinfo")
                 .oidcClientRegistrationEndpoint("/connect/v1/register")
                 .build();
     }
 
+    // Custom payload của JWT token
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
         return context -> {
             UserDetailsImpl user;
+            // Lấy thông tin user từ principal
             if (context.getPrincipal().getPrincipal() instanceof UserDetailsImpl)
                 user = (UserDetailsImpl) context.getPrincipal().getPrincipal();
             else
                 user = (UserDetailsImpl) context.getPrincipal().getDetails();
+
+            // Lấy danh sách quyền
             Set<String> authorities = user.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toSet());
-            // custom scope
-            if(context.getAuthorizationGrantType().equals(OAuth2PasswordGrantAuthenticationConverter.PASSWORD))
+
+            // Nếu là password grant thì thêm quyền vào scope
+            if (context.getAuthorizationGrantType().equals(OAuth2PasswordGrantAuthenticationConverter.PASSWORD))
                 authorities.forEach(context.getAuthorizedScopes()::add);
+
+            // Thêm thông tin tuỳ chỉnh vào token
             context.getClaims()
                     .claim("id", user.getId())
                     .claim("authorities", authorities);
         };
-
     }
 
+    // Sinh ra generator để tạo JWT access token + refresh token
     @Bean
     public OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator() {
         NimbusJwtEncoder jwtEncoder;
@@ -150,49 +139,51 @@ public class AuthorizationServerConfiguration {
             throw new RuntimeException(e);
         }
         JwtGenerator jwtGenerator = new JwtGenerator(jwtEncoder);
-        jwtGenerator.setJwtCustomizer(tokenCustomizer());
+        jwtGenerator.setJwtCustomizer(tokenCustomizer()); // Thêm custom claims vào token
         OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
         OAuth2RefreshTokenGenerator refreshTokenGenerator = new OAuth2RefreshTokenGenerator();
-        return new DelegatingOAuth2TokenGenerator(
-                jwtGenerator, accessTokenGenerator, refreshTokenGenerator);
+        return new DelegatingOAuth2TokenGenerator(jwtGenerator, accessTokenGenerator, refreshTokenGenerator);
     }
 
+    // Lưu trữ Authorization (ở đây lưu trong memory, thực tế nên dùng DB)
     @Bean
     public OAuth2AuthorizationService authorizationService() {
         return new InMemoryOAuth2AuthorizationService();
     }
 
+    // Đăng ký client cho OAuth2
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("client")
-                .clientSecret(passwordEncoder().encode("secret"))
+                .clientId("client") // Client ID
+                .clientSecret(passwordEncoder().encode("secret")) // Client Secret (mã hóa)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(OAuth2PasswordGrantAuthenticationConverter.PASSWORD)
+                .authorizationGrantType(OAuth2PasswordGrantAuthenticationConverter.PASSWORD) // Password grant
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("https://oidcdebugger.com/debug")
-                .tokenSettings(tokenSettings())
-                .scope("client-internal")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE) // Auth code grant
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN) // Refresh token
+                .redirectUri("https://oidcdebugger.com/debug") // URI callback khi login thành công
+                .tokenSettings(tokenSettings()) // Cấu hình token TTL
+                .scope("client-internal") // Scope cho client
                 .build();
         return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
+    // Thời gian sống của token
     @Bean
     public TokenSettings tokenSettings() {
         return TokenSettings.builder()
-                .accessTokenTimeToLive(Duration.ofDays(2))
-                .refreshTokenTimeToLive(Duration.ofDays(5))
+                .accessTokenTimeToLive(Duration.ofDays(2)) // Access token sống 2 ngày
+                .refreshTokenTimeToLive(Duration.ofDays(5)) // Refresh token sống 5 ngày
                 .build();
     }
 
+    // Provider xử lý password grant
     @Bean
     public OAuth2PasswordGrantAuthenticationProvider oAuth2PasswordGrantAuthenticationProvider(
             OAuth2AuthorizationService oAuth2AuthorizationService,
             OAuth2TokenGenerator<? extends OAuth2Token> oAuth2TokenGenerator,
             AuthenticationManager authenticationManager
-
     ) {
         return new OAuth2PasswordGrantAuthenticationProvider(
                 oAuth2AuthorizationService,
@@ -201,15 +192,13 @@ public class AuthorizationServerConfiguration {
         );
     }
 
-    // config client authentication
+    // Cấu hình filter chain cho Authorization Server
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationSecurityFilterChain(HttpSecurity http) throws Exception {
-        // Tạo configurer cho Authorization Server
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
-                new OAuth2AuthorizationServerConfigurer();
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
-        // Cấu hình token endpoint + OIDC
+        // Cấu hình token endpoint + custom password grant
         authorizationServerConfigurer
                 .tokenEndpoint(tokenEndpoint -> {
                     try {
@@ -226,20 +215,20 @@ public class AuthorizationServerConfiguration {
                         throw new RuntimeException(e);
                     }
                 })
-                .oidc(Customizer.withDefaults());
+                .oidc(Customizer.withDefaults()); // Bật OpenID Connect
 
-        // Cấu hình HttpSecurity và gắn configurer
         http
                 .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
                 .csrf(csrf -> csrf.ignoringRequestMatchers(authorizationServerConfigurer.getEndpointsMatcher()))
                 .exceptionHandling(e -> e.authenticationEntryPoint(
                         new LoginUrlAuthenticationEntryPoint("/login")))
-                .with(authorizationServerConfigurer, Customizer.withDefaults()); // Thay apply() bằng with()
+                .with(authorizationServerConfigurer, Customizer.withDefaults());
 
         return http.build();
     }
 
+    // Sinh cặp khóa RSA để ký JWT
     @Bean
     public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
         KeyPair keyPair = generateRsaKey();
@@ -253,12 +242,14 @@ public class AuthorizationServerConfiguration {
         return new ImmutableJWKSet<>(jwkSet);
     }
 
+    // Hàm sinh khóa RSA 2048 bit
     private static KeyPair generateRsaKey() throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
         return keyPairGenerator.generateKeyPair();
     }
 
+    // Bean decode JWT
     @Bean
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);

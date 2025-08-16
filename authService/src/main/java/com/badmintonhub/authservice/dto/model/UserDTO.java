@@ -1,5 +1,6 @@
 package com.badmintonhub.authservice.dto.model;
 
+import com.badmintonhub.authservice.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -39,4 +40,5 @@ public class UserDTO {
 
     private String gender;
     private LocalDate dateOfBirth;
+    private Role role;
 }

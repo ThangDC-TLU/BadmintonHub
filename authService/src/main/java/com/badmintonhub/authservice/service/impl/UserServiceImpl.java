@@ -10,6 +10,7 @@ import com.badmintonhub.authservice.exception.APIException;
 import com.badmintonhub.authservice.repository.RoleRepository;
 import com.badmintonhub.authservice.repository.UserRepository;
 import com.badmintonhub.authservice.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -52,7 +54,14 @@ public class UserServiceImpl implements UserService {
 
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = this.roleRepository.findByName("USER").get();
+        Role userRole = new Role();
+        if(userDTO.getRole() != null){
+            userRole = this.roleRepository.findById(userDTO.getRole().getId())
+                    .orElseThrow(()->new APIException("Role is not found!"));
+        } else {
+            userRole = this.roleRepository.findByName("USER").get();
+        }
+        log.info("Role found: {}", userRole);
         roles.add(userRole);
         newUser.setRoles(roles);
 

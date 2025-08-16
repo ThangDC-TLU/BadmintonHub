@@ -21,6 +21,10 @@ spring:
       authorizationserver:
         issuer: http://localhost:8082
 
+logging:
+  level:
+    com.badmintonhub.authservice.config: TRACE
+
 eureka:
   client:
     service-url:
