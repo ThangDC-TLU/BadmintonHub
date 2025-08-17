@@ -13,9 +13,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
     // Cấu hình SecurityFilterChain cho API của ứng dụng (không phải Authorization Server)
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable()) // Tắt CSRF (REST API thường không dùng)
+                .csrf(csrf -> csrf.disable()) // Tắt CSRF
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
                         .requestMatchers(
                                 "/actuator/**", // Cho phép health check
@@ -27,9 +27,6 @@ public class SecurityConfiguration {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
-                )
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
                 .formLogin(form -> form.disable())
                 .build();

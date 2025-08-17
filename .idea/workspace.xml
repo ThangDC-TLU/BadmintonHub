@@ -4,44 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/authService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/authservice/AuthServiceApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/authservice/entity/RemoteUser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/src/test/java/com/badmintonhub/authservice/AuthServiceApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/UserServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/dto/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/dto/mapper/UserMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/dto/message/ObjectResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/dto/message/ObjectResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/dto/message/RestResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/dto/message/RestResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/dto/model/AddressDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/dto/model/AddressDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/dto/model/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/dto/model/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/dto/model/UserUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/dto/model/UserUpdateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/entity/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/entity/Address.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/entity/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/exception/APIException.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/exception/APIException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/exception/GlobalException.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/exception/GlobalException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/repository/RoleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/utils/CustomHeaders.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/utils/CustomHeaders.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/utils/anotation/ApiMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/utils/anotation/ApiMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/badmintonhub/userservice/utils/format/FormatRestResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/userservice/utils/format/FormatRestResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/resources/application.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/test/java/com/badmintonhub/userservice/UserServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/test/java/com/badmintonhub/userservice/UserServiceApplicationTests.java" afterDir="false" />
-    </list>
+    <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,22 +22,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Project_Java/BadmintonHub&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "D:/Project_Java/BadmintonHub",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -97,6 +62,7 @@
       <workItem from="1754961710836" duration="602000" />
       <workItem from="1754964414379" duration="37000" />
       <workItem from="1755074500999" duration="1938000" />
+      <workItem from="1755398630919" duration="207000" />
     </task>
     <servers />
   </component>
