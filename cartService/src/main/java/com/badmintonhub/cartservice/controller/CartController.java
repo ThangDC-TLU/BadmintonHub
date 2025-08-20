@@ -25,4 +25,37 @@ public class CartController {
         this.cartRedisService.addProductToCart(userId, item);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping
+    @ApiMessage("Update cart item successfully!")
+    public ResponseEntity<Void> updateProductQuantity(
+            @RequestHeader(CustomHeaders.X_AUTH_USER_ID) String userId,
+            @RequestBody CartItemRequest item
+    ) {
+        this.cartRedisService.updateProductQuantity(userId, item);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @DeleteMapping
+    @ApiMessage("Remove item from cart successfully!")
+    public ResponseEntity<Void> removeProductFromCart(
+            @RequestHeader(CustomHeaders.X_AUTH_USER_ID) String userId,
+            @RequestBody CartItemRequest item
+    ) {
+        this.cartRedisService.removeProductFromCart(userId, item);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @DeleteMapping("/clear")
+    @ApiMessage("Clear cart successfully!")
+    public ResponseEntity<Void> clearCart(
+            @RequestHeader(CustomHeaders.X_AUTH_USER_ID) String userId
+    ) {
+        this.cartRedisService.clearCart(userId);
+        return ResponseEntity.ok().build();
+    }
+
+
 }
