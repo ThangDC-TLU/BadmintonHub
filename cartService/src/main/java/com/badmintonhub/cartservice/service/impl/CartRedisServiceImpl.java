@@ -1,17 +1,31 @@
 package com.badmintonhub.cartservice.service.impl;
 
+import com.badmintonhub.cartservice.dto.message.RestResponse;
+import com.badmintonhub.cartservice.dto.model.ProductItemBriefDTO;
 import com.badmintonhub.cartservice.dto.request.CartItemRequest;
 import com.badmintonhub.cartservice.service.CartRedisService;
 import com.badmintonhub.cartservice.service.base.BaseRedisService;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CartRedisServiceImpl implements CartRedisService {
     private final BaseRedisService baseRedisService;
-    public CartRedisServiceImpl(BaseRedisService baseRedisService) {
+    private final WebClient productWebClient; // bean trỏ tới PRODUCT-SERVICE hoặc Gateway
+
+    private static final String FIELD_PREFIX = "product_item:";
+
+    public CartRedisServiceImpl(BaseRedisService baseRedisService, WebClient productWebClient) {
         this.baseRedisService = baseRedisService;
+        this.productWebClient = productWebClient;
     }
 
     @Override
@@ -82,6 +96,118 @@ public class CartRedisServiceImpl implements CartRedisService {
         String key = "cart:user-" + userId;
         this.baseRedisService.del(key);
     }
+
+    @Override
+    public List<ProductItemBriefDTO> getProductFromCart(String userId) {
+        final String key = "cart:user-" + userId;
+        final Pattern PRODUCT_ITEM_PATTERN = Pattern.compile("^product_item:(\\d+):(\\d+)$"); // group1=productId, group2=optionId
+
+        // 1) Lấy toàn bộ field/value trong hash giỏ hàng
+        Map<String, Object> products = this.baseRedisService.getField(key);
+        if (products == null || products.isEmpty()) {
+            return List.of();
+        }
+
+        // 2) Trích xuất optionId (giữ thứ tự gặp được)
+        LinkedHashSet<Long> optionIdSet = new LinkedHashSet<>();
+        Map<Long, Integer> qtyByOption = new LinkedHashMap<>();
+
+        for (Map.Entry<String, Object> e : products.entrySet()) {
+            String field = e.getKey();
+            if (field == null) continue;
+
+            Matcher m = PRODUCT_ITEM_PATTERN.matcher(field);
+            if (!m.matches()) continue;
+
+            Long optionId = Long.valueOf(m.group(2)); // lấy optionId
+            optionIdSet.add(optionId);
+
+            int qty = asInt(e.getValue());
+            qtyByOption.merge(optionId, qty, Integer::sum);
+        }
+
+        if (optionIdSet.isEmpty()) {
+            return List.of();
+        }
+        List<Long> optionIds = new ArrayList<>(optionIdSet);
+
+        // 3) Gọi product-service để lấy Map<optionId, ProductItemBriefDTO>
+        RestResponse<Map<Long, ProductItemBriefDTO>> resp = productWebClient.post()
+                .uri("/product-options")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(optionIds)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, r ->
+                        r.bodyToMono(String.class).map(body ->
+                                new RuntimeException("product-service HTTP " + r.statusCode() + ": " + body)))
+                .bodyToMono(new ParameterizedTypeReference<RestResponse<Map<Long, ProductItemBriefDTO>>>() {})
+                .block();
+
+        if (resp == null) {
+            return List.of();
+        }
+        if (resp.getStatusCode() >= 400) {
+            // tuỳ bạn: ném exception hoặc log rồi trả rỗng
+            throw new RuntimeException("product-service error: " + resp.getStatusCode() + " - " + resp.getMessage());
+        }
+
+        Map<Long, ProductItemBriefDTO> productMap = resp.getData();
+        if (productMap == null || productMap.isEmpty()) {
+            return List.of();
+        }
+
+        if (productMap == null || productMap.isEmpty()) {
+            return List.of();
+        }
+
+        // 4) Trả list theo thứ tự optionIds; đảm bảo giá đã tính đầy đủ
+        List<ProductItemBriefDTO> result = new ArrayList<>(optionIds.size());
+        for (Long id : optionIds) {
+            ProductItemBriefDTO dto = productMap.get(id);
+            if (dto == null) continue;
+
+            int qty = qtyByOption.getOrDefault(id, 0);
+            dto.setQuantity(qty);
+            ensureComputedPrices(dto,qty);
+            result.add(dto);
+        }
+
+        return result;
+    }
+
+    private static int asInt(Object v) {
+        if (v == null) return 0;
+        if (v instanceof Number n) return n.intValue();
+        try {
+            return Integer.parseInt(String.valueOf(v));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private double round2(double v) {
+        return new java.math.BigDecimal(v).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue();
+    }
+
+    private void ensureComputedPrices(ProductItemBriefDTO p, int quantity) {
+        double unitFinal = p.getFinalPrice() > 0
+                ? p.getFinalPrice()
+                : (p.getBasePrice() + p.getAddPrice() - p.getSubPrice());
+        p.setFinalPrice(round2(unitFinal));
+
+        double factor = 1.0 - (p.getDiscountPercent() / 100.0);
+        if (factor < 0) factor = 0;
+        double unitDisc = p.getDiscountedFinalPrice() > 0
+                ? p.getDiscountedFinalPrice()
+                : (unitFinal * factor);
+        p.setDiscountedFinalPrice(round2(unitDisc));
+
+        p.setQuantity(quantity);
+        p.setLineFinalPrice(round2(unitFinal * quantity));
+        p.setLineDiscountedFinalPrice(round2(unitDisc * quantity));
+    }
+
+
 
     private String buildFieldKey(CartItemRequest item) {
         if (item.getOptionId() != null) {

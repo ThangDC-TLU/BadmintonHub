@@ -1,11 +1,14 @@
 package com.badmintonhub.cartservice.controller;
 
+import com.badmintonhub.cartservice.dto.model.ProductItemBriefDTO;
 import com.badmintonhub.cartservice.dto.request.CartItemRequest;
 import com.badmintonhub.cartservice.service.CartRedisService;
 import com.badmintonhub.cartservice.utils.CustomHeaders;
 import com.badmintonhub.cartservice.utils.anotation.ApiMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/carts")
@@ -14,6 +17,14 @@ public class CartController {
 
     public CartController(CartRedisService cartRedisService) {
         this.cartRedisService = cartRedisService;
+    }
+
+    @GetMapping
+    @ApiMessage("Get all product")
+    public ResponseEntity<List<ProductItemBriefDTO>> getProductFromCart(
+            @RequestHeader(CustomHeaders.X_AUTH_USER_ID) String userId
+    ){
+        return ResponseEntity.ok(this.cartRedisService.getProductFromCart(userId));
     }
 
     @PostMapping

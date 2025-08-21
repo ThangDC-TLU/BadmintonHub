@@ -1,6 +1,7 @@
 package com.badmintonhub.cartservice.service.base;
 
 import java.time.Duration;
+import java.util.Map;
 
 public interface BaseRedisService {
     boolean expire(String key, Duration ttl);
@@ -19,4 +20,6 @@ public interface BaseRedisService {
      * - Optional: gia hạn TTL cho key (vd 30 ngày)
      */
     Long cartIncr(String key, String field, long delta, Duration refreshTtlIfAny);
+
+    Map<String, Object> getField(String key);
 }

@@ -1,10 +1,12 @@
 package com.badmintonhub.cartservice.service.base.impl;
 
 import com.badmintonhub.cartservice.service.base.BaseRedisService;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Map;
 
 @Service
 public class BaseRedisServiceImpl implements BaseRedisService {
@@ -56,5 +58,14 @@ public class BaseRedisServiceImpl implements BaseRedisService {
         }
         return newQty;
     }
+
+    @Override
+    public Map<String, Object> getField(String key) {
+        // Ép kiểu generics ngay từ HashOperations
+        HashOperations<String, String, Object> hashOps = redisTemplate.opsForHash();
+        Map<String, Object> entries = hashOps.entries(key);
+        return entries; // tránh NullPointer
+    }
+
 
 }
