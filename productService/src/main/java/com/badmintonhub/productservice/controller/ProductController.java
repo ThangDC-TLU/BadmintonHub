@@ -1,6 +1,7 @@
 package com.badmintonhub.productservice.controller;
 
 import com.badmintonhub.productservice.dto.message.ObjectResponse;
+import com.badmintonhub.productservice.dto.model.ProductItemBriefDTO;
 import com.badmintonhub.productservice.dto.model.ProductDTO;
 import com.badmintonhub.productservice.dto.model.ProductUpdateDTO;
 import com.badmintonhub.productservice.dto.response.ProductResponseDTO;
@@ -15,6 +16,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -69,4 +73,18 @@ public class ProductController {
     ) {
         return ResponseEntity.ok(this.productService.updateStock(productId, quantity));
     }
+
+    @PostMapping(path = "/product-options")
+    public ResponseEntity<Map<Long, ProductItemBriefDTO>> findProductsByProductOptionIds(
+            @RequestBody List<Long> optionIds
+    ) {
+        if (optionIds == null || optionIds.isEmpty()) {
+            return ResponseEntity.ok(Map.of());
+        }
+        Map<Long, ProductItemBriefDTO> result =
+                productService.getProductItemBriefByOptionIds(optionIds);
+        return ResponseEntity.ok(result);
+    }
+
+
 }

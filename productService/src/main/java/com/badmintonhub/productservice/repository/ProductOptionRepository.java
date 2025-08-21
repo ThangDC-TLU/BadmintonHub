@@ -4,5 +4,8 @@ import com.badmintonhub.productservice.entity.ProductOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 public interface ProductOptionRepository extends JpaRepository<ProductOption,Long>, JpaSpecificationExecutor<ProductOption> {
+    List<ProductOption> findWithProductByIdIn(List<Long> ids);
 }

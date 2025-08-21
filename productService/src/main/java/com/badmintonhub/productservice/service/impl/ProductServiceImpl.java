@@ -2,10 +2,7 @@ package com.badmintonhub.productservice.service.impl;
 
 import com.badmintonhub.productservice.dto.mapper.ProductMapper;
 import com.badmintonhub.productservice.dto.message.ObjectResponse;
-import com.badmintonhub.productservice.dto.model.ProductDTO;
-import com.badmintonhub.productservice.dto.model.ProductOptionDTO;
-import com.badmintonhub.productservice.dto.model.ProductSpecificationDTO;
-import com.badmintonhub.productservice.dto.model.ProductUpdateDTO;
+import com.badmintonhub.productservice.dto.model.*;
 import com.badmintonhub.productservice.dto.response.ProductResponseDTO;
 import com.badmintonhub.productservice.entity.Category;
 import com.badmintonhub.productservice.entity.Product;
@@ -14,18 +11,16 @@ import com.badmintonhub.productservice.entity.ProductSpecification;
 import com.badmintonhub.productservice.exception.IdInvalidException;
 import com.badmintonhub.productservice.exception.ResourceNotFoundException;
 import com.badmintonhub.productservice.repository.CategoryRepository;
+import com.badmintonhub.productservice.repository.ProductOptionRepository;
 import com.badmintonhub.productservice.repository.ProductRepository;
 import com.badmintonhub.productservice.service.ProductService;
 import com.badmintonhub.productservice.utils.format.SlugConvert;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,10 +28,12 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     public final CategoryRepository categoryRepository;
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, CategoryRepository categoryRepository) {
+    public final ProductOptionRepository productOptionRepository;
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, CategoryRepository categoryRepository, ProductOptionRepository productOptionRepository) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.categoryRepository = categoryRepository;
+        this.productOptionRepository = productOptionRepository;
     }
 
     @Override
@@ -189,6 +186,76 @@ public class ProductServiceImpl implements ProductService {
 
         Product updated = productRepository.save(existingProduct);
         return productMapper.mapToResponse(updated);
+    }
+
+    @Override
+    public Map<Long, ProductItemBriefDTO> getProductItemBriefByOptionIds(List<Long> optionIds) {
+        if (optionIds == null || optionIds.isEmpty()) return Collections.emptyMap();
+
+        // Lọc null + distinct để tránh query thừa
+        List<Long> ids = optionIds.stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+        if (ids.isEmpty()) return Collections.emptyMap();
+
+        // Lấy options kèm product (tránh N+1)
+        List<ProductOption> options = this.productOptionRepository.findWithProductByIdIn(ids);
+        if (options.isEmpty()) return Collections.emptyMap();
+
+        // Map tạm: optionId -> DTO
+        Map<Long, ProductItemBriefDTO> temp = options.stream()
+                .collect(Collectors.toMap(
+                        ProductOption::getId,
+                        this::toItemBrief,
+                        (a, b) -> a
+                ));
+
+        // Giữ đúng thứ tự theo input và bỏ những id không tồn tại
+        Map<Long, ProductItemBriefDTO> out = new LinkedHashMap<>();
+        for (Long id : optionIds) {
+            ProductItemBriefDTO dto = temp.get(id);
+            if (dto != null) out.put(id, dto);
+        }
+        return out;
+    }
+
+    private ProductItemBriefDTO toItemBrief(ProductOption o) {
+        Product p = o.getProduct();
+
+        double base = safe(p.getPrice());
+        double add  = safe(o.getAddPrice());
+        double sub  = safe(o.getSubPrice());
+        double disc = safe(p.getDiscountRate()); // 10 = 10%
+
+        double finalPrice = base + add - sub;
+        if (finalPrice < 0) finalPrice = 0;
+
+        double discounted = finalPrice * (1 - disc / 100.0);
+        if (discounted < 0) discounted = 0;
+
+        ProductItemBriefDTO dto = new ProductItemBriefDTO();
+        dto.setProductId(p.getId());
+        dto.setOptionId(o.getId());
+        dto.setName(p.getName());
+        dto.setImage(p.getThumbnailUrl());
+        dto.setProductSlug(p.getProductSlug());
+        dto.setOptionLabel(((o.getName() == null) ? "" : o.getName()) +
+                ((o.getValue() == null) ? "" : " " + o.getValue()));
+        dto.setAvailable(true); // nối inventory sau nếu cần
+
+        dto.setBasePrice(base);
+        dto.setAddPrice(add);
+        dto.setSubPrice(sub);
+        dto.setDiscountPercent(disc);
+        dto.setFinalPrice(finalPrice);
+        dto.setDiscountedFinalPrice(discounted);
+
+        return dto;
+    }
+
+    private double safe(Double v) {
+        return v == null ? 0.0 : v;
     }
 
 
