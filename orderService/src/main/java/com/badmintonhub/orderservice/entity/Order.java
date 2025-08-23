@@ -18,64 +18,51 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(
-        name = "orders",
-        indexes = {
-                @Index(name = "idx_orders_user", columnList = "userId"),
-                @Index(name = "idx_orders_status", columnList = "orderStatus"),
-                @Index(name = "idx_orders_created_at", columnList = "createdAt")
-        },
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_orders_code", columnNames = "orderCode")
-        }
-)
+@Entity @Table(name = "orders")
 public class Order {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Mã đơn công khai */
-    private String orderCode;
-
+    private String orderCode;        // unique
     private Long userId;
+    private Long addressId;          // tham chiếu nguồn (không version)
 
-    /** Không snapshot địa chỉ: tham chiếu id*/
-    private Long addressId;
+    // --- snapshot địa chỉ (flatten cho đơn giản) ---
+    private String shipName;
+    private String shipPhone;
+    private String shipCompany;
+    private String shipProvince;
+    private String shipDistrict;
+    private String shipWard;
+    private String shipAddress;
+    private String shipAddressType;
 
-    /** Tiền tệ */
+    // --- tiền tệ & tổng tiền ---
     @Builder.Default
     private String currency = "VND";
-
-    /** Tổng tiền (snapshot) – BigDecimal khuyên dùng */
     private BigDecimal subtotal;
     private BigDecimal discountTotal;
     private BigDecimal shippingFee;
     private BigDecimal taxTotal;
     private BigDecimal grandTotal;
 
-    /** Trạng thái/Thanh toán */
+    // --- trạng thái & thanh toán ---
     @Enumerated(EnumType.STRING)
     private OrderStatusEnum orderStatus;
-
     @Enumerated(EnumType.STRING)
     private PaymentMethodEnum paymentMethod;
-
     @Enumerated(EnumType.STRING)
     private PaymentStatusEnum paymentStatus;
 
-    /** id giao dịch từ PSP (vd: PayPal orderId) */
-    private String paymentId;
+    private String paymentId;    // ví dụ PayPal orderId
 
     private String note;
 
-    /** Quan hệ items (snapshot từng dòng) */
+    // items (nên có, snapshot từng dòng)
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<OrderItem> items = new ArrayList<>();
 
-    /** Audit */
     @CreationTimestamp
     private Instant createdAt;
 
@@ -87,4 +74,5 @@ public class Order {
     @Version // bật optimistic locking
     private Long version;
 }
+
 
