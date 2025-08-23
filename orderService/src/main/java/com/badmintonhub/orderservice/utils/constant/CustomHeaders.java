@@ -1,4 +1,4 @@
-package com.badmintonhub.orderservice.utils;
+package com.badmintonhub.orderservice.utils.constant;
 
 public interface CustomHeaders {
     String X_AUTH_USER_ID = "X-Auth-User-Id";
