@@ -34,7 +34,6 @@ public class AddressController {
     }
 
     @GetMapping("/{id}")
-
     public ResponseEntity<AddressDTO> getAddressById(@PathVariable(name = "id") long id) throws APIException {
         return ResponseEntity.ok(this.addressService.getAddressById(id));
     }

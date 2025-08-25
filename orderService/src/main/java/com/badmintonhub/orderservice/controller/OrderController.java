@@ -20,10 +20,8 @@ public class OrderController {
 
     @PostMapping
     @ApiMessage("Create order")
-    public ResponseEntity<AddressDTO> createOrder(@RequestHeader(CustomHeaders.X_AUTH_USER_ID) long userId,
+    public ResponseEntity<OrderResponse> createOrder(@RequestHeader(CustomHeaders.X_AUTH_USER_ID) long userId,
                                                   @RequestBody CreateOrderRequest createOrderRequest) {
-
-        this.orderService.createOrder(userId, createOrderRequest);
         return ResponseEntity.ok(this.orderService.createOrder(userId, createOrderRequest));
     }
 }

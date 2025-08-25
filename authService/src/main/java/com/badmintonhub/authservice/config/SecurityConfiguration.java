@@ -20,7 +20,8 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/actuator/**", // Cho phép health check
                                 "/signup",
-                                "/register")
+                                "/register",
+                                "/api/v1/address/**")
                         .permitAll() // Các endpoint này không cần đăng nhập
                         .anyRequest().authenticated() // Các request khác phải đăng nhập
                 )

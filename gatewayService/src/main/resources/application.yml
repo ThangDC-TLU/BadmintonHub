@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: GATEWAY-SERVICE
@@ -23,16 +26,11 @@ spring:
         jwt:
           issuer-uri: http://localhost:9000
 
-
-server:
-  port: 8080
-
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-  endpoint:
     health:
       show-details: always
 
