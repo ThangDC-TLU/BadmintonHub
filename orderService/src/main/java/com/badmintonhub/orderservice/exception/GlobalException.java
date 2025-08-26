@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
@@ -51,14 +52,6 @@ public class GlobalException  {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
     }
 
-    @ExceptionHandler(value = DataIntegrityViolationException.class)
-    public ResponseEntity<RestResponse<Object>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        RestResponse<Object> response = new RestResponse<>();
-        response.setStatusCode(HttpStatus.CONFLICT.value());
-        response.setError("Data Integrity Violation");
-        response.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT.value()).body(response);
-    }
 
     @ExceptionHandler(value = ResourceNotFoundException.class)
     public ResponseEntity<RestResponse<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
@@ -79,4 +72,17 @@ public class GlobalException  {
         response.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
     }
+
+    @ExceptionHandler(value = {
+            ResponseStatusException.class
+    })
+    public ResponseEntity<RestResponse<Object>> handelResponseStatusException(Exception ex) {
+        RestResponse<Object> response = new RestResponse<>();
+        response.setError("Exception occurs...");
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+    }
+
+
 }

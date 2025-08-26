@@ -6,8 +6,10 @@ import com.badmintonhub.orderservice.dto.message.RestResponse;
 import com.badmintonhub.orderservice.dto.model.AddressDTO;
 import com.badmintonhub.orderservice.dto.model.ProductItemBriefDTO;
 import com.badmintonhub.orderservice.dto.request.CreateOrderRequest;
+import com.badmintonhub.orderservice.dto.response.ObjectResponse;
 import com.badmintonhub.orderservice.dto.response.OrderResponse;
 import com.badmintonhub.orderservice.entity.Order;
+import com.badmintonhub.orderservice.exception.IdInvalidException;
 import com.badmintonhub.orderservice.repository.OrderRepository;
 import com.badmintonhub.orderservice.service.OrderService;
 import com.badmintonhub.orderservice.utils.constant.CustomHeaders;
@@ -16,6 +18,9 @@ import com.badmintonhub.orderservice.utils.constant.PaymentMethodEnum;
 import com.badmintonhub.orderservice.utils.constant.PaymentStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -25,6 +30,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.*;
 
 import static com.badmintonhub.orderservice.utils.GenerateOrderCode.generateOrderCode;
@@ -144,6 +150,192 @@ public class OrderServiceImpl implements OrderService {
         OrderResponse response = orderMapper.toResponse(order);
         log.info("[CreateOrder] success orderCode={}, grandTotal={}", response.getOrderCode(), response.getGrandTotal());
         return response;
+    }
+
+    @Override
+    public OrderResponse getOrderById(long id) throws IdInvalidException {
+        Order order = this.orderRepository.findById(id)
+                .orElseThrow(() -> new IdInvalidException("Not found order by id " + id));
+        return orderMapper.toResponse(order);
+    }
+
+    @Override
+    public ObjectResponse getAllOrder(Specification<Order> spec, Pageable pageable) {
+        Page<Order> page = this.orderRepository.findAll(spec, pageable);
+        ObjectResponse objectResponse = new ObjectResponse();
+        ObjectResponse.Meta meta = new ObjectResponse.Meta();
+
+        meta.setTotal(page.getTotalElements());
+        meta.setPages(page.getTotalPages());
+
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageable.getPageSize());
+
+        objectResponse.setMeta(meta);
+
+        List<OrderResponse> orderResponses = page
+                .getContent()
+                .stream()
+                .map(orderMapper::toResponse)
+                .toList();
+        objectResponse.setResult(orderResponses);
+        return objectResponse;
+    }
+
+    @Override
+    @Transactional
+    public String cancelOrderById(long id) throws IdInvalidException {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new IdInvalidException("Not found order by id )" + id));
+
+        // Đã huỷ rồi → idempotent
+        if (order.getOrderStatus() == OrderStatusEnum.CANCELLED) {
+            return "Order already cancelled";
+        }
+
+        // Đã giao cho hãng vận chuyển hoặc đã giao xong → không cho huỷ
+        if (order.getOrderStatus() == OrderStatusEnum.SHIPPED
+                || order.getOrderStatus() == OrderStatusEnum.DELIVERED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Cannot cancel an order that is shipped or delivered");
+        }
+
+        // Đã thanh toán thành công → không cho huỷ (tuỳ chính sách có thể chuyển sang quy trình refund)
+        if (order.getPaymentStatus() == PaymentStatusEnum.PAID) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Cannot cancel a paid order");
+        }
+
+        // Với CREATED/PROCESSING và chưa PAID → cho huỷ
+        order.setOrderStatus(OrderStatusEnum.CANCELLED);
+
+        // Nếu đang chờ thanh toán (PENDING) thì đánh dấu thất bại (FAILED)
+        if (order.getPaymentStatus() == PaymentStatusEnum.PENDING) {
+            order.setPaymentStatus(PaymentStatusEnum.FAILED);
+        }
+        orderRepository.save(order);
+        return "Order canceled successfully";
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderResponse getOrderByCode(String orderCode) {
+        Order order = orderRepository.findByOrderCode(orderCode)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+        return orderMapper.toResponse(order);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ObjectResponse getMyOrders(long userId, OrderStatusEnum status, Pageable pageable) {
+        // Build specification: where userId = ? and (status = ? if provided)
+        Specification<Order> spec = (root, query, cb) -> {
+            var preds = new ArrayList<jakarta.persistence.criteria.Predicate>();
+            preds.add(cb.equal(root.get("userId"), userId));
+            if (status != null) {
+                preds.add(cb.equal(root.get("orderStatus"), status));
+            }
+            return cb.and(preds.toArray(new jakarta.persistence.criteria.Predicate[0]));
+        };
+
+        Page<Order> page = this.orderRepository.findAll(spec, pageable);
+        ObjectResponse objectResponse = new ObjectResponse();
+        ObjectResponse.Meta meta = new ObjectResponse.Meta();
+
+        meta.setTotal(page.getTotalElements());
+        meta.setPages(page.getTotalPages());
+
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageable.getPageSize());
+
+        objectResponse.setMeta(meta);
+
+        List<OrderResponse> orderResponses = page
+                .getContent()
+                .stream()
+                .map(orderMapper::toResponse)
+                .toList();
+        objectResponse.setResult(orderResponses);
+        return objectResponse;
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse updateStatus(long orderId, OrderStatusEnum nextStatus, String note) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        OrderStatusEnum current = order.getOrderStatus();
+        if (current == nextStatus) {
+            // không đổi gì
+            return orderMapper.toResponse(order);
+        }
+
+        // Rule chuyển trạng thái đơn giản (có thể chỉnh theo workflow của bạn)
+        boolean allowed = switch (current) {
+            case CREATED     -> EnumSet.of(OrderStatusEnum.PROCESSING, OrderStatusEnum.CANCELLED).contains(nextStatus);
+            case PROCESSING  -> EnumSet.of(OrderStatusEnum.SHIPPED, OrderStatusEnum.CANCELLED).contains(nextStatus);
+            case SHIPPED     -> nextStatus == OrderStatusEnum.DELIVERED;
+            case DELIVERED   -> false;
+            case CANCELLED   -> false;
+        };
+        if (!allowed) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Illegal transition: " + current + " -> " + nextStatus);
+        }
+
+        // Không cho hủy nếu đã PAID
+        if (nextStatus == OrderStatusEnum.CANCELLED && order.getPaymentStatus() == PaymentStatusEnum.PAID) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot cancel a paid order");
+        }
+
+        order.setOrderStatus(nextStatus);
+        if (note != null && !note.isBlank()) {
+            order.setNote((order.getNote() == null ? "" : order.getNote() + "\n") + "[STATUS] " + note);
+        }
+
+        Order saved = orderRepository.save(order);
+        return orderMapper.toResponse(saved);
+    }
+
+
+
+    @Override
+    @Transactional
+    public OrderResponse recordCodPayment(long orderId, BigDecimal amount, Instant paidAt, String note) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        if (order.getPaymentMethod() != PaymentMethodEnum.COD) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment method is not COD");
+        }
+        if (order.getOrderStatus() == OrderStatusEnum.CANCELLED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot record payment for cancelled order");
+        }
+        if (order.getPaymentStatus() == PaymentStatusEnum.PAID) {
+            // idempotent: đã PAID thì trả luôn
+            return orderMapper.toResponse(order);
+        }
+        if (amount == null || amount.signum() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid amount");
+        }
+        if (paidAt == null) {
+            paidAt = Instant.now();
+        }
+
+        // (tuỳ chính sách) xác thực số thu >= grandTotal
+        if (order.getGrandTotal() != null && amount.compareTo(order.getGrandTotal()) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount is less than grand total");
+        }
+
+        order.setPaymentStatus(PaymentStatusEnum.PAID);
+        order.setPaymentId("COD-" + paidAt.toEpochMilli()); // tuỳ bạn: lưu mã phiếu thu/biên nhận
+        if (note != null && !note.isBlank()) {
+            order.setNote((order.getNote() == null ? "" : order.getNote() + "\n") + "[COD] " + note);
+        }
+
+        Order saved = orderRepository.save(order);
+        return orderMapper.toResponse(saved);
     }
 }
 
