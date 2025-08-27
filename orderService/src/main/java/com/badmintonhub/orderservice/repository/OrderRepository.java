@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
     Optional<Order> findByOrderCode(String orderCode);
+
+    Optional<Order> findByPaymentId(String paypalOrderId);
 }

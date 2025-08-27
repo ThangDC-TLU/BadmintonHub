@@ -31,4 +31,8 @@ public interface OrderService {
     OrderResponse updateStatus(long orderId, @NotNull OrderStatusEnum nextStatus, String note);
 
     OrderResponse recordCodPayment(long orderId, @NotNull BigDecimal amount, @NotNull Instant paidAt, String note);
+
+    void cancelPaypalOrder(String paypalOrderId);
+
+    OrderResponse capturePaypalOrder(String paypalOrderId);
 }

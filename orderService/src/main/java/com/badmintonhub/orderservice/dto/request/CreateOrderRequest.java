@@ -18,6 +18,10 @@ public class CreateOrderRequest {
     @Builder.Default
     String currency = "VND";
     // optional: nếu muốn “checkout các item được chọn” trong giỏ
-    List<Long> selectedOptionIds;     // null => lấy toàn bộ giỏ
+    List<Long> selectedOptionIds;// null => lấy toàn bộ giỏ
+
+    // BẮT BUỘC nếu paymentMethod = PAYPAL
+    String returnUrl;
+    String cancelUrl;
 }
 

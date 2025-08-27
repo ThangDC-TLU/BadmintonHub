@@ -16,6 +16,11 @@ spring:
     hibernate.ddl-auto: update
     show-sql: true
 
+paypal:
+  base-url: https://api-m.sandbox.paypal.com
+  client-id: AYYRDdTng-kQWWO_lpE115YuPBxFbIMsIsUlihSRixnPMMpczwhmQ_AWBo70wTi33jmXczY5yjZ2jG10
+  secret: EMQl3xsGsd0j94_QrJjZSfJ5F1XkwM-6QWtG7O_gO1jQ3DLdK06mCfq5CyMg17n6ugcJ0ArJflpuY0Xq
+
 eureka:
   client:
     service-url:

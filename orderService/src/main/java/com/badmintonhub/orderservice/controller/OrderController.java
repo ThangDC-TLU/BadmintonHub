@@ -100,4 +100,19 @@ public class OrderController {
         return ResponseEntity.ok(orderService.recordCodPayment(orderId, body.getAmount(), body.getPaidAt(), body.getNote()));
     }
 
+    @GetMapping("/payments/paypal/return")
+    public org.springframework.http.ResponseEntity<OrderResponse> onReturn(
+            @RequestParam("token") String paypalOrderId // PayPal trả token=orderId
+    ) {
+        return ResponseEntity.ok(orderService.capturePaypalOrder(paypalOrderId));
+    }
+
+    @GetMapping("/payments/paypal/cancel")
+    public org.springframework.http.ResponseEntity<String> onCancel(
+            @RequestParam("token") String paypalOrderId
+    ) {
+        orderService.cancelPaypalOrder(paypalOrderId);
+        return ResponseEntity.ok("Cancelled on PayPal");
+    }
+
 }

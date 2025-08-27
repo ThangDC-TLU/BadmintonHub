@@ -29,7 +29,8 @@ public class OrderResponse {
     private ShippingAddress shippingAddress;  // địa chỉ hiển thị ngắn gọn
     private List<Item> items;                 // danh sách item tối thiểu
 
-    private Instant createdAt;                // thời điểm tạo đơn
+    private Instant createdAt;// thời điểm tạo đơn
+    private String approvalUrl;
 
     @Data
     @Builder

@@ -10,8 +10,12 @@ import com.badmintonhub.orderservice.dto.response.ObjectResponse;
 import com.badmintonhub.orderservice.dto.response.OrderResponse;
 import com.badmintonhub.orderservice.entity.Order;
 import com.badmintonhub.orderservice.exception.IdInvalidException;
+import com.badmintonhub.orderservice.paypal.PaypalClient;
+import com.badmintonhub.orderservice.dto.request.PaypalOrderCreateRequest;
+import com.badmintonhub.orderservice.dto.response.PaypalOrderCreateResponse;
 import com.badmintonhub.orderservice.repository.OrderRepository;
 import com.badmintonhub.orderservice.service.OrderService;
+import com.badmintonhub.orderservice.utils.FxConverter;
 import com.badmintonhub.orderservice.utils.constant.CustomHeaders;
 import com.badmintonhub.orderservice.utils.constant.OrderStatusEnum;
 import com.badmintonhub.orderservice.utils.constant.PaymentMethodEnum;
@@ -41,23 +45,25 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient webClient;
-
-    // MAPPERS
+    private final FxConverter fxConverter;
     private final OrderMapper orderMapper;
     private final OrderPricingMapper pricingMapper;
+    private final PaypalClient paypalClient;
 
-    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient, OrderMapper orderMapper, OrderPricingMapper pricingMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient, FxConverter fxConverter, OrderMapper orderMapper, OrderPricingMapper pricingMapper, PaypalClient paypalClient) {
         this.orderRepository = orderRepository;
         this.webClient = webClient;
+        this.fxConverter = fxConverter;
         this.orderMapper = orderMapper;
         this.pricingMapper = pricingMapper;
+        this.paypalClient = paypalClient;
     }
 
     @Override
     @Transactional // rollback khi có lỗi
     public OrderResponse createOrder(long userId, CreateOrderRequest req) {
 
-        // 1) Address (RestResponse<AddressDTO>)
+        // 1) Address
         RestResponse<AddressDTO> addrResp = webClient.get()
                 .uri("http://localhost:9000/api/v1/address/{id}", req.getAddressId())
                 .retrieve()
@@ -73,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
         AddressDTO addr = addrResp.getData();
         if (addr == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found");
 
-        // 2) Cart (RestResponse<List<ProductItemBriefDTO>>)
+        // 2) Cart
         RestResponse<List<ProductItemBriefDTO>> cartResp = webClient.get()
                 .uri("http://localhost:8082/api/v1/carts")
                 .header(CustomHeaders.X_AUTH_USER_ID, String.valueOf(userId))
@@ -98,13 +104,16 @@ public class OrderServiceImpl implements OrderService {
                 : new LinkedHashSet<>(req.getSelectedOptionIds());
 
         if (!selected.isEmpty()) {
-            Set<Long> pick = new LinkedHashSet<>(selected);
-            List<ProductItemBriefDTO> filtered = items.stream()
-                    .filter(i -> i != null && i.getOptionId() != null && pick.contains(i.getOptionId()))
+            items = items.stream()
+                    .filter(i -> i != null && i.getOptionId() != null && selected.contains(i.getOptionId()))
                     .toList();
+            if (items.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Không có item nào hợp lệ để checkout (selectedOptionIds không khớp)");
+            }
         }
 
-        // 3) Build Order (snapshot địa chỉ, trạng thái COD)
+        // 3) Build Order (snapshot địa chỉ)
         Order order = Order.builder()
                 .orderCode(generateOrderCode())
                 .userId(userId)
@@ -119,19 +128,17 @@ public class OrderServiceImpl implements OrderService {
                 .shipAddressType(addr.getAddressType())
                 .currency((req.getCurrency() == null || req.getCurrency().isBlank()) ? "VND" : req.getCurrency())
                 .orderStatus(OrderStatusEnum.CREATED)
-                .paymentMethod(req.getPaymentMethod()) // COD hiện tại
-                .paymentStatus(
-                        PaymentMethodEnum.COD.equals(req.getPaymentMethod())
-                                ? PaymentStatusEnum.UNPAID
-                                : PaymentStatusEnum.PENDING)
+                .paymentMethod(req.getPaymentMethod())
+                .paymentStatus(PaymentMethodEnum.COD.equals(req.getPaymentMethod())
+                        ? PaymentStatusEnum.UNPAID : PaymentStatusEnum.PENDING)
                 .note(req.getNote())
                 .build();
 
-        // 4) Dùng PRICING MAPPER: map items -> OrderItem + tính subtotal/discount
+        // 4) Map items -> OrderItem + tính tổng
         OrderPricingMapper.Totals totals = pricingMapper.attachCartItems(order, items);
 
-        BigDecimal shippingFee = new BigDecimal("20000.00"); // TODO: tính theo chính sách
-        BigDecimal taxTotal    = BigDecimal.ZERO;            // TODO: nếu tách VAT
+        BigDecimal shippingFee = new BigDecimal("20000.00");
+        BigDecimal taxTotal    = BigDecimal.ZERO;
         BigDecimal grandTotal  = totals.getSubtotal()
                 .subtract(totals.getDiscount())
                 .add(shippingFee)
@@ -143,12 +150,56 @@ public class OrderServiceImpl implements OrderService {
         order.setTaxTotal(taxTotal);
         order.setGrandTotal(grandTotal);
 
-        // 5) Lưu DB
-        order = orderRepository.save(order);
+        // ===== 5) Nhánh PAYPAL (tạo PayPal Order + trả approvalUrl) =====
+        if (PaymentMethodEnum.PAYPAL.equals(req.getPaymentMethod())) {
+            if (req.getReturnUrl() == null || req.getCancelUrl() == null
+                    || req.getReturnUrl().isBlank() || req.getCancelUrl().isBlank()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "returnUrl/cancelUrl là bắt buộc cho thanh toán PayPal");
+            }
 
-        // 6) Dùng ORDER MAPPER: entity -> response gọn
+            // Chuẩn bị ExperienceContext (tối giản)
+            var exp = PaypalOrderCreateRequest.ExperienceContext.builder()
+                    .returnUrl(req.getReturnUrl())
+                    .cancelUrl(req.getCancelUrl())
+                    .userAction("PAY_NOW")
+                    .build();
+
+            // Chọn currency dùng cho PayPal (sandbox: USD là an toàn)
+            String paypalCurrency = "USD";
+            BigDecimal grandVnd = order.getGrandTotal();      // tổng tiền VND của đơn
+            BigDecimal amountUsd = fxConverter.vndToUsd(grandVnd);
+
+            // Gọi PayPal tạo order
+            PaypalOrderCreateResponse p = paypalClient.createOrder(
+                    order.getOrderCode(),
+                    amountUsd,
+                    paypalCurrency,
+                    exp
+            ); // createOrder: method nhận (referenceId, amount, currency, exp)
+
+            // Lưu paypal order id
+            order.setPaymentId(p.getId());
+            order = orderRepository.save(order);
+
+            // Lấy approval url
+            String approvalUrl = (p.getLinks() == null) ? null :
+                    p.getLinks().stream()
+                            .filter(l -> "approve".equalsIgnoreCase(l.getRel()) || "payer-action".equalsIgnoreCase(l.getRel()))
+                            .map(PaypalOrderCreateResponse.Link::getHref)
+                            .findFirst().orElse(null);
+
+            OrderResponse response = orderMapper.toResponse(order);
+            response.setApprovalUrl(approvalUrl);
+            log.info("[CreateOrder][PAYPAL] orderCode={}, grandTotal={}, approvalUrl={}",
+                    response.getOrderCode(), response.getGrandTotal(), approvalUrl);
+            return response;
+        }
+
+        // ===== 6) Nhánh COD (mặc định) =====
+        order = orderRepository.save(order);
         OrderResponse response = orderMapper.toResponse(order);
-        log.info("[CreateOrder] success orderCode={}, grandTotal={}", response.getOrderCode(), response.getGrandTotal());
+        log.info("[CreateOrder][COD] orderCode={}, grandTotal={}", response.getOrderCode(), response.getGrandTotal());
         return response;
     }
 
@@ -337,6 +388,42 @@ public class OrderServiceImpl implements OrderService {
         Order saved = orderRepository.save(order);
         return orderMapper.toResponse(saved);
     }
+
+
+    @Override
+    @Transactional
+    public OrderResponse capturePaypalOrder(String paypalOrderId) {
+        PaypalOrderCreateResponse captureBody = paypalClient.captureOrder(paypalOrderId);
+        log.info(captureBody.toString());
+        if (captureBody == null || !captureBody.getStatus().contains("COMPLETED")) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "PayPal capture not completed");
+        }
+
+        Order order = orderRepository.findByPaymentId(paypalOrderId)
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Order not found for PayPal id"));
+
+        order.setPaymentStatus(PaymentStatusEnum.PAID);
+        if (order.getOrderStatus() == OrderStatusEnum.CREATED) {
+            order.setOrderStatus(OrderStatusEnum.PROCESSING);
+        }
+        order = orderRepository.save(order);
+        return orderMapper.toResponse(order);
+    }
+
+
+    @Override
+    @Transactional
+    public void cancelPaypalOrder(String paypalOrderId) {
+        orderRepository.findByPaymentId(paypalOrderId).ifPresent(o -> {
+            if (o.getPaymentStatus() == PaymentStatusEnum.PENDING) {
+                o.setPaymentStatus(PaymentStatusEnum.FAILED);
+                orderRepository.save(o);
+            }
+        });
+    }
+
 }
 
 
