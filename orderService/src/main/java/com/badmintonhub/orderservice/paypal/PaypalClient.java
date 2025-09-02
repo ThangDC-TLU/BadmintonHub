@@ -31,27 +31,38 @@ public class PaypalClient {
             PaypalOrderCreateRequest.ExperienceContext exp
     ) {
         String value = amount.setScale(2, RoundingMode.HALF_UP).toPlainString();
-
-        // Cách đơn giản: dùng application_context
-        var req = PaypalOrderCreateRequest.builder()
+        PaypalOrderCreateRequest req = PaypalOrderCreateRequest.builder()
                 .intent("CAPTURE")
                 .purchaseUnits(List.of(
                         PaypalOrderCreateRequest.PurchaseUnit.builder()
                                 .referenceId(referenceId)
                                 .amount(PaypalOrderCreateRequest.Amount.builder()
                                         .currencyCode(currency)   // -> JSON: currency_code
-                                        .value(value)
+                                        .value(value)             // -> JSON: value
                                         .build())
-                                .build()))
-                .applicationContext(PaypalOrderCreateRequest.ApplicationContext.builder()
-                        .returnUrl(exp.getReturnUrl())
-                        .cancelUrl(exp.getCancelUrl())
-                        .brandName("BadmintonHub")
-                        .userAction("PAY_NOW")
-                        .shippingPreference("NO_SHIPPING")
-                        .locale("en-US")
-                        .build())
+                                .build()
+                ))
+                .paymentSource(
+                        PaypalOrderCreateRequest.PaymentSource.builder()
+                                .paypal(
+                                        PaypalOrderCreateRequest.Paypal.builder()
+                                                .experienceContext(
+                                                        PaypalOrderCreateRequest.ExperienceContext.builder()
+                                                                .returnUrl(exp.getReturnUrl())
+                                                                .cancelUrl(exp.getCancelUrl())
+                                                                .brandName("BadmintonHub")
+                                                                .userAction("PAY_NOW")
+                                                                .shippingPreference("NO_SHIPPING")
+                                                                .locale("en-US")
+                                                                .paymentMethodPreference("IMMEDIATE_PAYMENT_REQUIRED")
+                                                                .build()
+                                                )
+                                                .build()
+                                )
+                                .build()
+                )
                 .build();
+
 
         return webClient.post()
                 .uri(paypalProperties.getBaseUrl() + "/v2/checkout/orders")

@@ -322,7 +322,7 @@ public class OrderServiceImpl implements OrderService {
             return orderMapper.toResponse(order);
         }
 
-        // Rule chuyển trạng thái đơn giản (có thể chỉnh theo workflow của bạn)
+        // Rule chuyển trạng thái
         boolean allowed = switch (current) {
             case CREATED     -> EnumSet.of(OrderStatusEnum.PROCESSING, OrderStatusEnum.CANCELLED).contains(nextStatus);
             case PROCESSING  -> EnumSet.of(OrderStatusEnum.SHIPPED, OrderStatusEnum.CANCELLED).contains(nextStatus);
@@ -374,13 +374,13 @@ public class OrderServiceImpl implements OrderService {
             paidAt = Instant.now();
         }
 
-        // (tuỳ chính sách) xác thực số thu >= grandTotal
+        // xác thực số thu >= grandTotal
         if (order.getGrandTotal() != null && amount.compareTo(order.getGrandTotal()) < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount is less than grand total");
         }
 
         order.setPaymentStatus(PaymentStatusEnum.PAID);
-        order.setPaymentId("COD-" + paidAt.toEpochMilli()); // tuỳ bạn: lưu mã phiếu thu/biên nhận
+        order.setPaymentId("COD-" + paidAt.toEpochMilli()); //lưu mã phiếu thu/biên nhận
         if (note != null && !note.isBlank()) {
             order.setNote((order.getNote() == null ? "" : order.getNote() + "\n") + "[COD] " + note);
         }
