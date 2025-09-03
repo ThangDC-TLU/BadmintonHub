@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/noti_db
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+  application:
+    name: NOTI-SERVICE
+
+server:
+  port: 8084
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      NOTI-SERVICE:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+  retry:
+    instances:
+      NOTI-SERVICE:
+        # registerHealthIndicator: true   # (b?t n?u mu?n)
+        maxAttempts: 5
+        waitDuration: 2s
