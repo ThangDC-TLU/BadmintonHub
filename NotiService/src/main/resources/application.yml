@@ -39,6 +39,10 @@ resilience4j:
   retry:
     instances:
       NOTI-SERVICE:
-        # registerHealthIndicator: true   # (b?t n?u mu?n)
         maxAttempts: 5
         waitDuration: 2s
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
