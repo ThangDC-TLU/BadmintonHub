@@ -89,6 +89,10 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.PUT, "api/v1/categories/**").hasAuthority("SCOPE_ADMIN")
                         .pathMatchers(HttpMethod.DELETE, "api/v1/categories/**").hasAuthority("SCOPE_ADMIN")
 
+                        //Them xoa sua notification
+                        .pathMatchers(HttpMethod.POST, "api/v1/notifications/**").hasAuthority("SCOPE_ADMIN")
+                        .pathMatchers(HttpMethod.PUT, "api/v1/notifications/**").hasAuthority("SCOPE_ADMIN")
+                        .pathMatchers(HttpMethod.DELETE, "api/v1/notifications/**").hasAuthority("SCOPE_ADMIN")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
