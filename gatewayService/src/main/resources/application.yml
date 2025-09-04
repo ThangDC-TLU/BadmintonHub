@@ -11,10 +11,10 @@ spring:
           uri: lb://product-service
           predicates:
             - Path=/api/v1/products/**, /api/v1/categories/**
-        - id: AUTH-SERVICE
-          uri: lb://auth-service
+        - id: CART-SERVICE
+          uri: lb://cart-service
           predicates:
-            - Path=/api/v1/users/**
+            - Path=/api/v1/carts/**
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
           predicates:
