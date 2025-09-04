@@ -1,6 +1,6 @@
-package com.badmintonhub.productservice.security;
+package com.badmintonhub.orderservice.security;
 
-import com.badmintonhub.productservice.utils.CustomHeaders;
+import com.badmintonhub.orderservice.utils.constant.CustomHeaders;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

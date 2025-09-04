@@ -1,4 +1,4 @@
-package com.badmintonhub.productservice.security;
+package com.badmintonhub.orderservice.security;
 
 
 import lombok.AllArgsConstructor;
