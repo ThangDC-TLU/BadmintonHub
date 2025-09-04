@@ -15,6 +15,14 @@ spring:
           uri: lb://cart-service
           predicates:
             - Path=/api/v1/carts/**
+        - id: ORDER-SERVICE
+          uri: lb://order-service
+          predicates:
+            - Path=/api/v1/orders/**
+        - id: NOTI-SERVICE
+          uri: lb://noti-service
+          predicates:
+            - Path=/api/v1/notifications/**
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
           predicates:
