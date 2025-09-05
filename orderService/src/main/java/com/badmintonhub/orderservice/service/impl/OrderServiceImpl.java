@@ -1,14 +1,17 @@
 package com.badmintonhub.orderservice.service.impl;
 
 import com.badmintonhub.orderservice.dto.mapper.OrderMapper;
+import com.badmintonhub.orderservice.dto.mapper.OrderPlacedEventMapper;
 import com.badmintonhub.orderservice.dto.mapper.OrderPricingMapper;
 import com.badmintonhub.orderservice.dto.message.RestResponse;
 import com.badmintonhub.orderservice.dto.model.AddressDTO;
 import com.badmintonhub.orderservice.dto.model.ProductItemBriefDTO;
+import com.badmintonhub.orderservice.dto.model.UserDTO;
 import com.badmintonhub.orderservice.dto.request.CreateOrderRequest;
 import com.badmintonhub.orderservice.dto.response.ObjectResponse;
 import com.badmintonhub.orderservice.dto.response.OrderResponse;
 import com.badmintonhub.orderservice.entity.Order;
+import com.badmintonhub.orderservice.dto.event.OrderPlacedEvent;
 import com.badmintonhub.orderservice.exception.IdInvalidException;
 import com.badmintonhub.orderservice.paypal.PaypalClient;
 import com.badmintonhub.orderservice.dto.request.PaypalOrderCreateRequest;
@@ -28,6 +31,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -49,14 +53,16 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final OrderPricingMapper pricingMapper;
     private final PaypalClient paypalClient;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
-    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient, FxConverter fxConverter, OrderMapper orderMapper, OrderPricingMapper pricingMapper, PaypalClient paypalClient) {
+    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient, FxConverter fxConverter, OrderMapper orderMapper, OrderPricingMapper pricingMapper, PaypalClient paypalClient, KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate) {
         this.orderRepository = orderRepository;
         this.webClient = webClient;
         this.fxConverter = fxConverter;
         this.orderMapper = orderMapper;
         this.pricingMapper = pricingMapper;
         this.paypalClient = paypalClient;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
@@ -200,6 +206,21 @@ public class OrderServiceImpl implements OrderService {
         order = orderRepository.save(order);
         OrderResponse response = orderMapper.toResponse(order);
         log.info("[CreateOrder][COD] orderCode={}, grandTotal={}", response.getOrderCode(), response.getGrandTotal());
+
+        OrderPlacedEvent event = OrderPlacedEventMapper.fromOrderResponse(
+                response,
+                addr.getEmail(),
+                addr.getName(),
+                "vi-VN",
+                "Asia/Ho_Chi_Minh",
+                "https://badmintonhub.vn/orders/" + order.getOrderCode(),
+                "https://badmintonhub.vn/track/" + order.getOrderCode(),
+                userId
+        );
+
+        kafkaTemplate.send("order-topic", event);
+        log.info(("Đã gửi Kafka event: " + event));
+
         return response;
     }
 

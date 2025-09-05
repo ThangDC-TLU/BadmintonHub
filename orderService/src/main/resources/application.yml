@@ -16,6 +16,15 @@ spring:
     hibernate.ddl-auto: update
     show-sql: true
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+
 paypal:
   base-url: https://api-m.sandbox.paypal.com
   client-id: AYYRDdTng-kQWWO_lpE115YuPBxFbIMsIsUlihSRixnPMMpczwhmQ_AWBo70wTi33jmXczY5yjZ2jG10
