@@ -4,29 +4,62 @@ server:
 spring:
   application:
     name: GATEWAY-SERVICE
+
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: 2000           # 2s cho TCP connect
+        response-timeout: 3s            # 3s tổng thời gian chờ response (Netty)
       routes:
         - id: PRODUCT-SERVICE
-          uri: lb://product-service
+          uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/api/v1/products/**, /api/v1/categories/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: productClient
+                fallbackUri: forward:/__fallback/product
+
         - id: CART-SERVICE
-          uri: lb://cart-service
+          uri: lb://CART-SERVICE
           predicates:
             - Path=/api/v1/carts/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: cartClient
+                fallbackUri: forward:/__fallback/cart
+
         - id: ORDER-SERVICE
-          uri: lb://order-service
+          uri: lb://ORDER-SERVICE
           predicates:
             - Path=/api/v1/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderClient
+                fallbackUri: forward:/__fallback/order
+
         - id: NOTI-SERVICE
-          uri: lb://noti-service
+          uri: lb://NOTI-SERVICE
           predicates:
             - Path=/api/v1/notifications/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: notiClient
+                fallbackUri: forward:/__fallback/noti
+
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
           predicates:
             - Path=/oauth2/v1/**, /api/v1/auth/**, /api/v1/users/**, /api/v1/address/**, /connect/v1/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: authClient
+                fallbackUri: forward:/__fallback/auth
 
   security:
     oauth2:
@@ -34,13 +67,41 @@ spring:
         jwt:
           issuer-uri: http://localhost:9000
 
+resilience4j:
+  circuitbreaker:
+    # Định nghĩa cấu hình CHUNG ở đây
+    configs:
+      defaultProfile:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 20
+        minimumNumberOfCalls: 10
+        failureRateThreshold: 50
+        slowCallDurationThreshold: 2s
+        slowCallRateThreshold: 60
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+    # Khai báo từng CIRCUIT BREAKER INSTANCE và kế thừa từ config chung
+    instances:
+      productClient:
+        baseConfig: defaultProfile
+      cartClient:
+        baseConfig: defaultProfile
+      orderClient:
+        baseConfig: defaultProfile
+      notiClient:
+        baseConfig: defaultProfile
+      authClient:
+        baseConfig: defaultProfile
+
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-    health:
-      show-details: always
+  health:
+    show-details: always
 
 eureka:
   client:

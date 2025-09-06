@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Order ${order.orderCode} Confirmed</title>
     <style>
-        /* Một chút responsive cơ bản */
         @media only screen and (max-width:600px){
             .container{width:100% !important; padding:16px !important;}
             .stack{display:block !important; width:100% !important;}
             .text-right{ text-align:left !important; }
             .btn{display:block !important; width:100% !important;}
         }
-        /* Fix cho dark mode (nhiều client hỗ trợ) */
+
         @media (prefers-color-scheme: dark) {
             body{background:#0b0b0b !important; color:#eaeaea !important;}
             .card{background:#161616 !important; border-color:#2a2a2a !important;}

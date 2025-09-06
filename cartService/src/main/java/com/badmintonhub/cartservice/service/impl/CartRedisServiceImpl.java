@@ -5,27 +5,33 @@ import com.badmintonhub.cartservice.dto.model.ProductItemBriefDTO;
 import com.badmintonhub.cartservice.dto.request.CartItemRequest;
 import com.badmintonhub.cartservice.service.CartRedisService;
 import com.badmintonhub.cartservice.service.base.BaseRedisService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 public class CartRedisServiceImpl implements CartRedisService {
     private final BaseRedisService baseRedisService;
-    private final WebClient productWebClient; // bean trỏ tới PRODUCT-SERVICE hoặc Gateway
 
     private static final String FIELD_PREFIX = "product_item:";
+    private final WebClient.Builder lbWebClient;
 
-    public CartRedisServiceImpl(BaseRedisService baseRedisService, WebClient productWebClient) {
+    public CartRedisServiceImpl(BaseRedisService baseRedisService, WebClient.Builder lbWebClient) {
         this.baseRedisService = baseRedisService;
-        this.productWebClient = productWebClient;
+        this.lbWebClient = lbWebClient;
     }
 
     @Override
@@ -97,6 +103,8 @@ public class CartRedisServiceImpl implements CartRedisService {
         this.baseRedisService.del(key);
     }
 
+    @CircuitBreaker(name = "productClient", fallbackMethod = "getProductFallback")
+    @Retry(name = "productClient")
     @Override
     public List<ProductItemBriefDTO> getProductFromCart(String userId) {
         final String key = "cart:user-" + userId;
@@ -132,23 +140,29 @@ public class CartRedisServiceImpl implements CartRedisService {
         List<Long> optionIds = new ArrayList<>(optionIdSet);
 
         // 3) Gọi product-service để lấy Map<optionId, ProductItemBriefDTO>
-        RestResponse<Map<Long, ProductItemBriefDTO>> resp = productWebClient.post()
-                .uri("/product-options")
+        RestResponse<Map<Long, ProductItemBriefDTO>> resp = lbWebClient
+                .baseUrl("http://PRODUCT-SERVICE")
+                .build()
+                .post()
+                .uri("/api/v1/products/product-options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(optionIds)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, r ->
-                        r.bodyToMono(String.class).map(body ->
-                                new RuntimeException("product-service HTTP " + r.statusCode() + ": " + body)))
+                        r.bodyToMono(String.class)
+                                .flatMap(body -> Mono.error(new RuntimeException(
+                                        "PRODUCT-SERVICE HTTP %s: %s".formatted(r.statusCode(), body)))))
                 .bodyToMono(new ParameterizedTypeReference<RestResponse<Map<Long, ProductItemBriefDTO>>>() {})
-                .block();
+                .timeout(Duration.ofSeconds(3))
+                .block(); // exception sẽ bung ra -> CB nhìn thấy -> fallback
+
 
         if (resp == null) {
             return List.of();
         }
         if (resp.getStatusCode() >= 400) {
             // tuỳ bạn: ném exception hoặc log rồi trả rỗng
-            throw new RuntimeException("product-service error: " + resp.getStatusCode() + " - " + resp.getMessage());
+            throw new RuntimeException("PRODUCT-SERVICE error: " + resp.getStatusCode() + " - " + resp.getMessage());
         }
 
         Map<Long, ProductItemBriefDTO> productMap = resp.getData();
@@ -173,6 +187,12 @@ public class CartRedisServiceImpl implements CartRedisService {
         }
 
         return result;
+    }
+
+    // Fallback
+    private List<ProductItemBriefDTO> getProductFallback(String userId, Throwable ex) {
+        log.error("ProductFallback userId={}, cause={}", userId, ex.toString(), ex);
+        return List.of(); // degrade
     }
 
     private static int asInt(Object v) {
