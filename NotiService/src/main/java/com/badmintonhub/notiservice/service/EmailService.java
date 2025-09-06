@@ -25,12 +25,6 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String fromAddress;
 
-    @Value("${app.brand.name:BadmintonHub}")
-    private String brandName;
-
-    @Value("${app.brand.logo:https://via.placeholder.com/140x32?text=BadmintonHub}")
-    private String brandLogo;
-
     public void sendOrderEmail(@NonNull OrderPlacedEvent event) {
         if (event.getCustomerEmail() == null || event.getCustomerEmail().isBlank()) {
             throw new IllegalArgumentException("customerEmail is required");
@@ -41,7 +35,7 @@ public class EmailService {
                 " đã được tạo";
 
         // Render từ FreeMarker template
-        final String html = renderer.renderOrderPlacedEmail(event, brandName, brandLogo);
+        final String html = renderer.renderOrderPlacedEmail(event);
 
         try {
             MimeMessage message = mailSender.createMimeMessage();

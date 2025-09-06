@@ -21,11 +21,9 @@ public class EmailTemplateRenderer {
         this.fm = fm; // bean Configuration được Spring Boot auto-config khi dùng starter freemarker
     }
 
-    public String renderOrderPlacedEmail(OrderPlacedEvent order, String companyName, String logoUrl) {
+    public String renderOrderPlacedEmail(OrderPlacedEvent order) {
         Map<String, Object> model = new HashMap<>();
         model.put("order", order);
-        model.put("companyName", companyName);
-        model.put("logoUrl", logoUrl);
         model.put("supportEmail", "support@badmintonhub.com");
 
         ZoneId zone = ZoneId.of(order.getTimezone() != null ? order.getTimezone() : "Asia/Ho_Chi_Minh");

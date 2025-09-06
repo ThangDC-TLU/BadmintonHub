@@ -26,22 +26,6 @@
     <tr>
         <td align="center" style="padding:24px;">
             <table class="container" role="presentation" width="600" cellspacing="0" cellpadding="0" style="width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.05);">
-                <!-- Header -->
-                <tr>
-                    <td style="background:#0ea5e9; padding:20px 24px;">
-                        <table width="100%" role="presentation">
-                            <tr>
-                                <td>
-                                    <img src="${logoUrl!'https://via.placeholder.com/140x32?text=BadmintonHub'}" alt="${companyName!'BadmintonHub'}" width="140" style="display:block;border:0;">
-                                </td>
-                                <td align="right" class="text-right" style="font-size:13px; color:#e6f6fe;">
-                                    ${companyName!'BadmintonHub'}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
                 <!-- Hero -->
                 <tr>
                     <td style="padding:28px 24px 12px;">
