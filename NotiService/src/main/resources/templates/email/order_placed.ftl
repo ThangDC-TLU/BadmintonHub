@@ -161,9 +161,13 @@
                     <#if order.trackingUrl??>
                     <a class="btn" href="${order.trackingUrl}" style="text-decoration:none; display:inline-block; padding:12px 18px; margin:4px 0; background:#111827; color:#ffffff; border-radius:8px; font-weight:bold;">Theo dõi vận chuyển</a>
                 </#if>
-                <#if order.approvalUrl?? && order.paymentStatus?string('')?upper_case == 'PENDING'>
-                <a class="btn" href="${order.approvalUrl}" style="text-decoration:none; display:inline-block; padding:12px 18px; margin:4px 0; background:#16a34a; color:#ffffff; border-radius:8px; font-weight:bold;">Thanh toán/Approve</a>
-            </#if>
+                    <#-- Chỉ hiện nút khi có approvalUrl, paymentMethod=PAYPAL, paymentStatus=PENDING -->
+                    <#if (order.approvalUrl?? && order.approvalUrl?has_content)
+                    && ((order.paymentMethod!'')?upper_case == 'PAYPAL')
+                    && ((order.paymentStatus!'')?upper_case == 'PENDING')>
+                        <a class="btn" href="${order.approvalUrl}" style="text-decoration:none; display:inline-block; padding:12px 18px; margin:4px 0; background:#16a34a; color:#ffffff; border-radius:8px; font-weight:bold;">
+                        Thanh toán/Approve</a>
+                    </#if>
     </td>
 </tr>
 </table>

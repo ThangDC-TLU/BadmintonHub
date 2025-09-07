@@ -54,8 +54,8 @@ resilience4j:
         failureRateThreshold: 50
       orderToPaypal:
         baseConfig: defaultCB
-        slowCallDurationThreshold: 3s      # PayPal đôi khi chậm hơn các service nội bộ
-        waitDurationInOpenState: 10s
+        slowCallDurationThreshold: 20s      # PayPal đôi khi chậm hơn các service nội bộ
+        waitDurationInOpenState: 30s
 
   retry:
     configs:

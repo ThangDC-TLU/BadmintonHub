@@ -73,8 +73,6 @@ public class OrderExternalService {
 
     // ===== PAYPAL =====
     @CircuitBreaker(name = "orderToPaypal", fallbackMethod = "fallbackPaypal")
-    @Retry(name = "orderToPaypal")
-    @Bulkhead(name = "orderToPaypal")
     public RestResponse<PaypalOrderCreateResponse> createPaypalOrder(
             String orderCode, BigDecimal amount, String currency,
             PaypalOrderCreateRequest.ExperienceContext exp

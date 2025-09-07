@@ -6,7 +6,6 @@ import com.badmintonhub.orderservice.dto.mapper.OrderPricingMapper;
 import com.badmintonhub.orderservice.dto.message.RestResponse;
 import com.badmintonhub.orderservice.dto.model.AddressDTO;
 import com.badmintonhub.orderservice.dto.model.ProductItemBriefDTO;
-import com.badmintonhub.orderservice.dto.model.UserDTO;
 import com.badmintonhub.orderservice.dto.request.CreateOrderRequest;
 import com.badmintonhub.orderservice.dto.response.ObjectResponse;
 import com.badmintonhub.orderservice.dto.response.OrderResponse;
@@ -20,23 +19,19 @@ import com.badmintonhub.orderservice.repository.OrderRepository;
 import com.badmintonhub.orderservice.service.OrderExternalService;
 import com.badmintonhub.orderservice.service.OrderService;
 import com.badmintonhub.orderservice.utils.FxConverter;
-import com.badmintonhub.orderservice.utils.constant.CustomHeaders;
 import com.badmintonhub.orderservice.utils.constant.OrderStatusEnum;
 import com.badmintonhub.orderservice.utils.constant.PaymentMethodEnum;
 import com.badmintonhub.orderservice.utils.constant.PaymentStatusEnum;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -51,7 +46,6 @@ import static com.badmintonhub.orderservice.utils.GenerateOrderCode.generateOrde
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
     private final FxConverter fxConverter;
     private final OrderMapper orderMapper;
     private final OrderPricingMapper pricingMapper;
@@ -59,9 +53,16 @@ public class OrderServiceImpl implements OrderService {
     private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
     private final OrderExternalService  orderExternalService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient, FxConverter fxConverter, OrderMapper orderMapper, OrderPricingMapper pricingMapper, PaypalClient paypalClient, KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate, OrderExternalService orderExternalService) {
+    public OrderServiceImpl(
+            OrderRepository orderRepository,
+            FxConverter fxConverter,
+            OrderMapper orderMapper,
+            OrderPricingMapper pricingMapper,
+            PaypalClient paypalClient,
+            KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate,
+            OrderExternalService orderExternalService)
+    {
         this.orderRepository = orderRepository;
-        this.webClient = webClient;
         this.fxConverter = fxConverter;
         this.orderMapper = orderMapper;
         this.pricingMapper = pricingMapper;
@@ -71,18 +72,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional // rollback khi có lỗi
+    @Transactional(rollbackFor = Exception.class) // rollback cho cả checked exceptions nếu có
     public OrderResponse createOrder(long userId, CreateOrderRequest req) throws IdInvalidException {
+        // 1) Lấy địa chỉ
         RestResponse<AddressDTO> addrResp = this.orderExternalService.getAddressById(userId);
-
         if (addrResp == null) throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "User service no response");
         if (addrResp.getStatusCode() >= 400)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address business error: " + addrResp.getMessage());
         AddressDTO addr = addrResp.getData();
         if (addr == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found");
 
+        // 2) Lấy cart
         RestResponse<List<ProductItemBriefDTO>> cartResp = this.orderExternalService.getCart(userId);
-
         if (cartResp == null || cartResp.getData() == null)
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Cart service no response");
 
@@ -90,11 +91,10 @@ public class OrderServiceImpl implements OrderService {
         if (items.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Giỏ hàng trống");
 
-        // 2.1) Lọc theo selectedOptionIds (nếu có)
+        // 2.1) Lọc theo selectedOptionIds
         Set<Long> selected = (req.getSelectedOptionIds() == null)
                 ? Collections.emptySet()
                 : new LinkedHashSet<>(req.getSelectedOptionIds());
-
         if (!selected.isEmpty()) {
             items = items.stream()
                     .filter(i -> i != null && i.getOptionId() != null && selected.contains(i.getOptionId()))
@@ -105,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        // 3) Build Order (snapshot địa chỉ)
+        // 3) Build Order
         Order order = Order.builder()
                 .orderCode(generateOrderCode())
                 .userId(userId)
@@ -126,9 +126,8 @@ public class OrderServiceImpl implements OrderService {
                 .note(req.getNote())
                 .build();
 
-        // 4) Map items -> OrderItem + tính tổng
+        // 4) Map items + tính tổng
         OrderPricingMapper.Totals totals = pricingMapper.attachCartItems(order, items);
-
         BigDecimal shippingFee = new BigDecimal("20000.00");
         BigDecimal taxTotal    = BigDecimal.ZERO;
         BigDecimal grandTotal  = totals.getSubtotal()
@@ -142,7 +141,10 @@ public class OrderServiceImpl implements OrderService {
         order.setTaxTotal(taxTotal);
         order.setGrandTotal(grandTotal);
 
-        // ===== 5) Nhánh PAYPAL (tạo PayPal Order + trả approvalUrl) =====
+        // Dùng biến để chuẩn bị gửi event SAU COMMIT
+        final AddressDTO fAddr = addr;
+
+        // ===== 5) PAYPAL =====
         if (PaymentMethodEnum.PAYPAL.equals(req.getPaymentMethod())) {
             if (req.getReturnUrl() == null || req.getCancelUrl() == null
                     || req.getReturnUrl().isBlank() || req.getCancelUrl().isBlank()) {
@@ -150,67 +152,97 @@ public class OrderServiceImpl implements OrderService {
                         "returnUrl/cancelUrl là bắt buộc cho thanh toán PayPal");
             }
 
-            // Chuẩn bị ExperienceContext (tối giản)
-            var exp = PaypalOrderCreateRequest.ExperienceContext.builder()
-                    .returnUrl(req.getReturnUrl())
-                    .cancelUrl(req.getCancelUrl())
-                    .userAction("PAY_NOW")
-                    .build();
+            try {
+                var exp = PaypalOrderCreateRequest.ExperienceContext.builder()
+                        .returnUrl(req.getReturnUrl())
+                        .cancelUrl(req.getCancelUrl())
+                        .userAction("PAY_NOW")
+                        .build();
 
-            // Chọn currency dùng cho PayPal (sandbox: USD là an toàn)
-            String paypalCurrency = "USD";
-            BigDecimal grandVnd = order.getGrandTotal();      // tổng tiền VND của đơn
-            BigDecimal amountUsd = fxConverter.vndToUsd(grandVnd);
+                String paypalCurrency = "USD";
+                BigDecimal amountUsd = fxConverter.vndToUsd(order.getGrandTotal());
 
-//            // Gọi PayPal tạo order
-//            PaypalOrderCreateResponse p = paypalClient.createOrder(
-//                    order.getOrderCode(),
-//                    amountUsd,
-//                    paypalCurrency,
-//                    exp
-//            ); // createOrder: method nhận (referenceId, amount, currency, exp)
+                // Gọi PayPal → nếu lỗi, ném runtime để rollback
+                PaypalOrderCreateResponse p = this.orderExternalService
+                        .createPaypalOrder(order.getOrderCode(), amountUsd, paypalCurrency, exp)
+                        .getData();
+                if (p == null || p.getId() == null) {
+                    throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Cannot create PayPal order");
+                }
 
-            PaypalOrderCreateResponse p = this.orderExternalService.createPaypalOrder(order.getOrderCode(),amountUsd,paypalCurrency,exp).getData();
+                order.setPaymentId(p.getId());
+                order = orderRepository.save(order); // lưu vào DB trong cùng transaction
 
-            // Lưu paypal order id
-            order.setPaymentId(p.getId());
-            order = orderRepository.save(order);
+                String approvalUrl = (p.getLinks() == null) ? null :
+                        p.getLinks().stream()
+                                .filter(l -> "approve".equalsIgnoreCase(l.getRel()) || "payer-action".equalsIgnoreCase(l.getRel()))
+                                .map(PaypalOrderCreateResponse.Link::getHref)
+                                .findFirst().orElse(null);
 
-            // Lấy approval url
-            String approvalUrl = (p.getLinks() == null) ? null :
-                    p.getLinks().stream()
-                            .filter(l -> "approve".equalsIgnoreCase(l.getRel()) || "payer-action".equalsIgnoreCase(l.getRel()))
-                            .map(PaypalOrderCreateResponse.Link::getHref)
-                            .findFirst().orElse(null);
+                OrderResponse response = orderMapper.toResponse(order);
+                response.setApprovalUrl(approvalUrl);
 
-            OrderResponse response = orderMapper.toResponse(order);
-            response.setApprovalUrl(approvalUrl);
-            log.info("[CreateOrder][PAYPAL] orderCode={}, grandTotal={}, approvalUrl={}",
-                    response.getOrderCode(), response.getGrandTotal(), approvalUrl);
-            return response;
+                OrderPlacedEvent event = OrderPlacedEventMapper.fromOrderResponse(
+                        response,
+                        fAddr.getEmail(),
+                        fAddr.getName(),
+                        "vi-VN",
+                        "Asia/Ho_Chi_Minh",
+                        "https://badmintonhub.vn/orders/" + order.getOrderCode(),
+                        "https://badmintonhub.vn/track/" + order.getOrderCode(),
+                        userId
+                );
+                event.setPaymentMethod(PaymentMethodEnum.PAYPAL);
+
+                // CHỈ gửi Kafka SAU KHI COMMIT DB
+                Order finalOrder = order;
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override public void afterCommit() {
+                        kafkaTemplate.send("order-topic", event);
+                        log.info("[CreateOrder][PAYPAL][AFTER_COMMIT] sent Kafka event for orderCode={}, paymentID={}", response.getOrderCode(), finalOrder.getPaymentId());
+                    }
+                });
+
+                log.info("[CreateOrder][PAYPAL] orderCode={}, grandTotal={}, approvalUrl={}",
+                        response.getOrderCode(), response.getGrandTotal(), approvalUrl);
+                return response;
+
+            } catch (ResponseStatusException e) {
+                throw e; // giữ nguyên để rollback
+            } catch (Exception e) {
+                // Bọc lỗi sang Runtime để rollback
+                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "PayPal create order failed", e);
+            }
         }
 
-        // ===== 6) Nhánh COD (mặc định) =====
+        // ===== 6) COD =====
         order = orderRepository.save(order);
         OrderResponse response = orderMapper.toResponse(order);
         log.info("[CreateOrder][COD] orderCode={}, grandTotal={}", response.getOrderCode(), response.getGrandTotal());
 
         OrderPlacedEvent event = OrderPlacedEventMapper.fromOrderResponse(
                 response,
-                addr.getEmail(),
-                addr.getName(),
+                fAddr.getEmail(),
+                fAddr.getName(),
                 "vi-VN",
                 "Asia/Ho_Chi_Minh",
                 "https://badmintonhub.vn/orders/" + order.getOrderCode(),
                 "https://badmintonhub.vn/track/" + order.getOrderCode(),
                 userId
         );
+        event.setPaymentMethod(PaymentMethodEnum.COD);
 
-        kafkaTemplate.send("order-topic", event);
-        log.info(("Đã gửi Kafka event: " + event));
+        // CHỈ gửi Kafka SAU KHI COMMIT DB
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override public void afterCommit() {
+                kafkaTemplate.send("order-topic", event);
+                log.info("[CreateOrder][COD][AFTER_COMMIT] sent Kafka event for orderCode={}", response.getOrderCode());
+            }
+        });
 
         return response;
     }
+
 
     @Override
     public OrderResponse getOrderById(long id) throws IdInvalidException {

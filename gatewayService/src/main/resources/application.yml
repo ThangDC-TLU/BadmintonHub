@@ -15,7 +15,7 @@ spring:
     gateway:
       httpclient:
         connect-timeout: 2000          # TCP connect 2s
-        response-timeout: 12s          # Tổng thời gian chờ HTTP client của Gateway (>= timelimiter lớn nhất)
+        response-timeout: 30s          # Tổng thời gian chờ HTTP client của Gateway (>= timelimiter lớn nhất)
       routes:
         - id: PRODUCT-SERVICE
           uri: lb://PRODUCT-SERVICE
@@ -108,7 +108,7 @@ resilience4j:
         timeoutDuration: 4s
         cancelRunningFuture: true
       orderClient:
-        timeoutDuration: 10s                  # lớn nhất; vẫn < response-timeout (12s)
+        timeoutDuration: 25s                  # lớn nhất; vẫn < response-timeout (30s)
         cancelRunningFuture: true
       notiClient:
         timeoutDuration: 3s
