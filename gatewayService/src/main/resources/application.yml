@@ -5,11 +5,17 @@ spring:
   application:
     name: GATEWAY-SERVICE
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000
+
   cloud:
     gateway:
       httpclient:
-        connect-timeout: 2000           # 2s cho TCP connect
-        response-timeout: 3s            # 3s tổng thời gian chờ response (Netty)
+        connect-timeout: 2000          # TCP connect 2s
+        response-timeout: 12s          # Tổng thời gian chờ HTTP client của Gateway (>= timelimiter lớn nhất)
       routes:
         - id: PRODUCT-SERVICE
           uri: lb://PRODUCT-SERVICE
@@ -20,6 +26,7 @@ spring:
               args:
                 name: productClient
                 fallbackUri: forward:/__fallback/product
+                statusCodes: 500,502,503,504     # chỉ fallback khi backend 5xx
 
         - id: CART-SERVICE
           uri: lb://CART-SERVICE
@@ -30,6 +37,7 @@ spring:
               args:
                 name: cartClient
                 fallbackUri: forward:/__fallback/cart
+                statusCodes: 500,502,503,504
 
         - id: ORDER-SERVICE
           uri: lb://ORDER-SERVICE
@@ -40,6 +48,7 @@ spring:
               args:
                 name: orderClient
                 fallbackUri: forward:/__fallback/order
+                statusCodes: 500,502,503,504     # tránh coi 4xx nghiệp vụ là lỗi CB
 
         - id: NOTI-SERVICE
           uri: lb://NOTI-SERVICE
@@ -50,6 +59,7 @@ spring:
               args:
                 name: notiClient
                 fallbackUri: forward:/__fallback/noti
+                statusCodes: 500,502,503,504
 
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
@@ -60,29 +70,21 @@ spring:
               args:
                 name: authClient
                 fallbackUri: forward:/__fallback/auth
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:9000
+                statusCodes: 500,502,503,504
 
 resilience4j:
   circuitbreaker:
-    # Định nghĩa cấu hình CHUNG ở đây
     configs:
       defaultProfile:
         slidingWindowType: COUNT_BASED
         slidingWindowSize: 20
         minimumNumberOfCalls: 10
         failureRateThreshold: 50
-        slowCallDurationThreshold: 2s
+        slowCallDurationThreshold: 4s         # ngưỡng slow-call mặc định
         slowCallRateThreshold: 60
-        waitDurationInOpenState: 20s
-        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s          # mở mạch 10s rồi thử lại
+        permittedNumberOfCallsInHalfOpenState: 5
         automaticTransitionFromOpenToHalfOpenEnabled: true
-
-    # Khai báo từng CIRCUIT BREAKER INSTANCE và kế thừa từ config chung
     instances:
       productClient:
         baseConfig: defaultProfile
@@ -90,10 +92,30 @@ resilience4j:
         baseConfig: defaultProfile
       orderClient:
         baseConfig: defaultProfile
+        slowCallDurationThreshold: 8s         # order có PayPal/auth/cart → nới ngưỡng
       notiClient:
         baseConfig: defaultProfile
       authClient:
         baseConfig: defaultProfile
+        slowCallDurationThreshold: 3s
+
+  timelimiter:
+    instances:
+      productClient:
+        timeoutDuration: 3s                   # <= response-timeout và phù hợp SLA backend
+        cancelRunningFuture: true
+      cartClient:
+        timeoutDuration: 4s
+        cancelRunningFuture: true
+      orderClient:
+        timeoutDuration: 10s                  # lớn nhất; vẫn < response-timeout (12s)
+        cancelRunningFuture: true
+      notiClient:
+        timeoutDuration: 3s
+        cancelRunningFuture: true
+      authClient:
+        timeoutDuration: 3s
+        cancelRunningFuture: true
 
 management:
   endpoints:
@@ -111,3 +133,6 @@ eureka:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway.filter.factory.SpringCloudCircuitBreakerResilience4JFilterFactory: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG
+    reactor.netty.http.client: DEBUG

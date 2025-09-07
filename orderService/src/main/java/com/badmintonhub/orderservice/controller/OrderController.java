@@ -32,7 +32,7 @@ public class OrderController {
     public ResponseEntity<OrderResponse> createOrder(
             @RequestHeader(CustomHeaders.X_AUTH_USER_ID) long userId,
             @Valid @RequestBody CreateOrderRequest req
-    ) {
+    ) throws IdInvalidException {
         return ResponseEntity.ok(orderService.createOrder(userId, req));
     }
 

@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 public interface OrderService {
-    OrderResponse createOrder(long userId, CreateOrderRequest createOrderRequest);
+    OrderResponse createOrder(long userId, CreateOrderRequest createOrderRequest) throws IdInvalidException;
 
     OrderResponse getOrderById(long id) throws IdInvalidException;
 

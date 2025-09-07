@@ -17,12 +17,15 @@ import com.badmintonhub.orderservice.paypal.PaypalClient;
 import com.badmintonhub.orderservice.dto.request.PaypalOrderCreateRequest;
 import com.badmintonhub.orderservice.dto.response.PaypalOrderCreateResponse;
 import com.badmintonhub.orderservice.repository.OrderRepository;
+import com.badmintonhub.orderservice.service.OrderExternalService;
 import com.badmintonhub.orderservice.service.OrderService;
 import com.badmintonhub.orderservice.utils.FxConverter;
 import com.badmintonhub.orderservice.utils.constant.CustomHeaders;
 import com.badmintonhub.orderservice.utils.constant.OrderStatusEnum;
 import com.badmintonhub.orderservice.utils.constant.PaymentMethodEnum;
 import com.badmintonhub.orderservice.utils.constant.PaymentStatusEnum;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -54,8 +57,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderPricingMapper pricingMapper;
     private final PaypalClient paypalClient;
     private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+    private final OrderExternalService  orderExternalService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient, FxConverter fxConverter, OrderMapper orderMapper, OrderPricingMapper pricingMapper, PaypalClient paypalClient, KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate) {
+    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient, FxConverter fxConverter, OrderMapper orderMapper, OrderPricingMapper pricingMapper, PaypalClient paypalClient, KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate, OrderExternalService orderExternalService) {
         this.orderRepository = orderRepository;
         this.webClient = webClient;
         this.fxConverter = fxConverter;
@@ -63,21 +67,13 @@ public class OrderServiceImpl implements OrderService {
         this.pricingMapper = pricingMapper;
         this.paypalClient = paypalClient;
         this.kafkaTemplate = kafkaTemplate;
+        this.orderExternalService = orderExternalService;
     }
 
     @Override
     @Transactional // rollback khi có lỗi
-    public OrderResponse createOrder(long userId, CreateOrderRequest req) {
-
-        // 1) Address
-        RestResponse<AddressDTO> addrResp = webClient.get()
-                .uri("http://localhost:9000/api/v1/address/{id}", req.getAddressId())
-                .retrieve()
-                .onStatus(HttpStatusCode::isError, r ->
-                        r.bodyToMono(String.class).map(body ->
-                                new ResponseStatusException(r.statusCode(), "Address HTTP error: " + body)))
-                .bodyToMono(new ParameterizedTypeReference<RestResponse<AddressDTO>>() {})
-                .block();
+    public OrderResponse createOrder(long userId, CreateOrderRequest req) throws IdInvalidException {
+        RestResponse<AddressDTO> addrResp = this.orderExternalService.getAddressById(userId);
 
         if (addrResp == null) throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "User service no response");
         if (addrResp.getStatusCode() >= 400)
@@ -85,17 +81,7 @@ public class OrderServiceImpl implements OrderService {
         AddressDTO addr = addrResp.getData();
         if (addr == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found");
 
-        // 2) Cart
-        RestResponse<List<ProductItemBriefDTO>> cartResp = webClient.get()
-                .uri("http://localhost:8082/api/v1/carts")
-                .header(CustomHeaders.X_AUTH_USER_ID, String.valueOf(userId))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .onStatus(HttpStatusCode::isError, r ->
-                        r.bodyToMono(String.class).map(body ->
-                                new ResponseStatusException(r.statusCode(), "Cart HTTP error: " + body)))
-                .bodyToMono(new ParameterizedTypeReference<RestResponse<List<ProductItemBriefDTO>>>() {})
-                .block();
+        RestResponse<List<ProductItemBriefDTO>> cartResp = this.orderExternalService.getCart(userId);
 
         if (cartResp == null || cartResp.getData() == null)
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Cart service no response");
@@ -176,13 +162,15 @@ public class OrderServiceImpl implements OrderService {
             BigDecimal grandVnd = order.getGrandTotal();      // tổng tiền VND của đơn
             BigDecimal amountUsd = fxConverter.vndToUsd(grandVnd);
 
-            // Gọi PayPal tạo order
-            PaypalOrderCreateResponse p = paypalClient.createOrder(
-                    order.getOrderCode(),
-                    amountUsd,
-                    paypalCurrency,
-                    exp
-            ); // createOrder: method nhận (referenceId, amount, currency, exp)
+//            // Gọi PayPal tạo order
+//            PaypalOrderCreateResponse p = paypalClient.createOrder(
+//                    order.getOrderCode(),
+//                    amountUsd,
+//                    paypalCurrency,
+//                    exp
+//            ); // createOrder: method nhận (referenceId, amount, currency, exp)
+
+            PaypalOrderCreateResponse p = this.orderExternalService.createPaypalOrder(order.getOrderCode(),amountUsd,paypalCurrency,exp).getData();
 
             // Lưu paypal order id
             order.setPaymentId(p.getId());

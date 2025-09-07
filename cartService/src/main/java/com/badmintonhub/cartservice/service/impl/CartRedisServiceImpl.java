@@ -103,8 +103,8 @@ public class CartRedisServiceImpl implements CartRedisService {
         this.baseRedisService.del(key);
     }
 
-    @CircuitBreaker(name = "productClient", fallbackMethod = "getProductFallback")
-    @Retry(name = "productClient")
+    @CircuitBreaker(name = "cartToProduct", fallbackMethod = "getCartFallback")
+    @Retry(name = "cartToProduct")
     @Override
     public List<ProductItemBriefDTO> getProductFromCart(String userId) {
         final String key = "cart:user-" + userId;
@@ -190,8 +190,8 @@ public class CartRedisServiceImpl implements CartRedisService {
     }
 
     // Fallback
-    private List<ProductItemBriefDTO> getProductFallback(String userId, Throwable ex) {
-        log.error("ProductFallback userId={}, cause={}", userId, ex.toString(), ex);
+    private List<ProductItemBriefDTO> getCartFallback(String userId, Throwable ex) {
+        log.error("CartFallback userId={}, cause={}", userId, ex.toString(), ex);
         return List.of(); // degrade
     }
 

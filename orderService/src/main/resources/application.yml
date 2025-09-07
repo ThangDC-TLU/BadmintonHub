@@ -24,6 +24,87 @@ spring:
       properties:
         spring.json.add.type.headers: false
 
+resilience4j:
+  circuitbreaker:
+    configs:
+      defaultCB:
+        slidingWindowType: COUNT_BASED         # Thống kê theo số lần gọi
+        slidingWindowSize: 50                  # 50 request gần nhất
+        minimumNumberOfCalls: 20               # Bắt đầu tính toán sau ≥20 request
+        failureRateThreshold: 50               # ≥50% lỗi -> OPEN
+        slowCallDurationThreshold: 2s          # >2s coi là chậm
+        slowCallRateThreshold: 60              # ≥60% chậm -> OPEN
+        waitDurationInOpenState: 20s           # OPEN -> chờ 20s -> HALF_OPEN
+        permittedNumberOfCallsInHalfOpenState: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+    instances:
+      # Địa chỉ (Auth/User) - bắt buộc, nhạy hơn
+      orderToAuth:
+        baseConfig: defaultCB
+        slowCallDurationThreshold: 800ms
+        slowCallRateThreshold: 50
+        waitDurationInOpenState: 8s
+        failureRateThreshold: 50
+      # Cart - có thể nặng hơn nên ngưỡng chậm cao hơn
+      orderToCart:
+        baseConfig: defaultCB
+        slowCallDurationThreshold: 2s
+        slowCallRateThreshold: 60
+        waitDurationInOpenState: 15s
+        failureRateThreshold: 50
+      orderToPaypal:
+        baseConfig: defaultCB
+        slowCallDurationThreshold: 3s      # PayPal đôi khi chậm hơn các service nội bộ
+        waitDurationInOpenState: 10s
+
+  retry:
+    configs:
+      defaultRetry:
+        maxAttempts: 3                         # 1 lần chính + 2 retry
+        waitDuration: 200ms
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        # Chỉ retry lỗi tạm thời (mạng/5xx/timeouts)
+        retryExceptions:
+          - java.io.IOException
+          - org.springframework.web.reactive.function.client.WebClientRequestException
+          - org.springframework.web.reactive.function.client.WebClientResponseException.ServiceUnavailable   # 503
+          - org.springframework.web.reactive.function.client.WebClientResponseException.GatewayTimeout      # 504
+        # Không retry các lỗi nghiệp vụ
+        ignoreExceptions:
+          - org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest          # 400
+          - org.springframework.web.reactive.function.client.WebClientResponseException.NotFound            # 404
+          - org.springframework.web.reactive.function.client.WebClientResponseException.Unauthorized        # 401
+          - org.springframework.web.reactive.function.client.WebClientResponseException.Forbidden           # 403
+    instances:
+      orderToAuth:
+        baseConfig: defaultRetry
+        maxAttempts: 2
+        waitDuration: 150ms
+      orderToCart:
+        baseConfig: defaultRetry
+        maxAttempts: 3
+        waitDuration: 250ms
+
+  timelimiter:
+    instances:
+      orderToAuth:
+        timeoutDuration: 1s                    # Địa chỉ phải phản hồi nhanh
+      orderToCart:
+        timeoutDuration: 2s
+
+  bulkhead:
+    instances:
+      orderToAuth:
+        maxConcurrentCalls: 100
+        maxWaitDuration: 0                     # fail-fast, không xếp hàng
+      orderToCart:
+        maxConcurrentCalls: 50
+        maxWaitDuration: 0
+      orderToPaypal:
+        maxConcurrentCalls: 30
+        maxWaitDuration: 0
+
 
 paypal:
   base-url: https://api-m.sandbox.paypal.com
