@@ -21,7 +21,10 @@ public class SecurityConfiguration {
                                 "/actuator/**", // Cho phép health check
                                 "/signup",
                                 "/register",
-                                "/api/v1/address/**")
+                                "/api/v1/address/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html")
                         .permitAll() // Các endpoint này không cần đăng nhập
                         .anyRequest().authenticated() // Các request khác phải đăng nhập
                 )
