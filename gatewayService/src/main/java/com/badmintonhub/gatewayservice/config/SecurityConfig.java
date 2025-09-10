@@ -66,7 +66,12 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(auth -> auth
-                        .pathMatchers("/actuator/**").permitAll()
+                        .pathMatchers(
+                                "/actuator/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/openapi/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/oauth2/v1/token").permitAll()
                         .pathMatchers(HttpMethod.POST, "api/v1/auth/signup").permitAll()
                         .pathMatchers(HttpMethod.POST, "api/v1/auth/register").permitAll()

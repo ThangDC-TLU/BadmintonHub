@@ -136,3 +136,30 @@ logging:
     org.springframework.cloud.gateway.filter.factory.SpringCloudCircuitBreakerResilience4JFilterFactory: DEBUG
     io.github.resilience4j.circuitbreaker: DEBUG
     reactor.netty.http.client: DEBUG
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:                             # tập trung docs qua các endpoint /openapi/*
+      - name: product-service
+        url: /openapi/product
+      - name: order-service
+        url: /openapi/order
+      - name: auth-service
+        url: /openapi/auth
+      - name: cart-service
+        url: /openapi/cart
+      - name: noti-service
+        url: /openapi/noti
+    persistAuthorization: true        # giữ token giữa các tab
+    oauth:
+      client-id: client               # clientId đăng ký
+      client-secret: secret
+      use-pkce-with-authorization-code-grant: false   # dùng password grant
+      scope-separator: " "
+  api-docs:
+    enabled: true
+
+auth:
+  token-url: http://localhost:8085/oauth2/v1/token
+  scopes: client-internal

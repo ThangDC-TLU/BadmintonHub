@@ -62,7 +62,7 @@ public class ProductController {
     @ApiMessage("Delete a product")
     public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long productId) {
         this.productService.deleteProduct(productId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/{productId}/stock/{quantity}")

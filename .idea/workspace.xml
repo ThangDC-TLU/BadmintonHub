@@ -5,38 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/NotiService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/NotiService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NotiService/src/main/java/com/badmintonhub/notiservice/utils/format/FormatRestResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/NotiService/src/main/java/com/badmintonhub/notiservice/utils/format/FormatRestResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/authService/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/OpenApiProxyController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/BadmintonHub.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/authservice/config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/authservice/config/SecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/authservice/utils/format/FormatRestResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/badmintonhub/authservice/utils/format/FormatRestResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cartService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/cartService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cartService/src/main/java/com/badmintonhub/cartservice/utils/FormatRestResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cartService/src/main/java/com/badmintonhub/cartservice/utils/FormatRestResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orderService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/utils/FormatRestResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/utils/FormatRestResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/productService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/utils/format/FormatRestResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/utils/format/FormatRestResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gatewayService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/GatewayServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/GatewayServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/controller/ProductController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "ThangDC-TLU"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ThangDC-TLU&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/ThangDC-TLU/BadmintonHub.git",
-    "accountId": "caedd297-4e83-4938-b944-e3476456e33b"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ThangDC-TLU/BadmintonHub.git&quot;,
+    &quot;accountId&quot;: &quot;caedd297-4e83-4938-b944-e3476456e33b&quot;
   }
-}]]></component>
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -46,6 +55,9 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="30pEJv8sUpUSd2lhSRhjDwYTWbc" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -53,9 +65,21 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.AuthServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.CartServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ConfigServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.GatewayServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.NotiServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.OrderServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ServiceRegistryApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
@@ -65,10 +89,166 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.GatewayServiceApplication">
+    <configuration name="AuthServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
+        <env name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4317" />
+        <env name="OTEL_EXPORTER_OTLP_PROTOCOL" value="grpc" />
+        <env name="OTEL_LOGS_EXPORTER" value="otlp" />
+        <env name="OTEL_METRICS_EXPORTER" value="otlp" />
+        <env name="OTEL_RESOURCE_ATTRIBUTES" value="deployment.environment\\=local,service.version\\=1.0.0,team\\=badmintonhub" />
+        <env name="OTEL_SERVICE_NAME" value="AUTH-SERVICE" />
+        <env name="OTEL_TRACES_EXPORTER" value="otlp" />
+      </envs>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="authService" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.authservice.AuthServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CartServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
+        <env name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4317" />
+        <env name="OTEL_EXPORTER_OTLP_PROTOCOL" value="grpc" />
+        <env name="OTEL_LOGS_EXPORTER" value="otlp" />
+        <env name="OTEL_METRICS_EXPORTER" value="otlp" />
+        <env name="OTEL_RESOURCE_ATTRIBUTES" value="deployment.environment\\=local,service.version\\=1.0.0,team\\=badmintonhub" />
+        <env name="OTEL_SERVICE_NAME" value="CART-SERVICE" />
+        <env name="OTEL_TRACES_EXPORTER" value="otlp" />
+      </envs>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="cartService" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.cartservice.CartServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConfigServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="configServer" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.configserver.ConfigServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GatewayServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
+        <env name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4317" />
+        <env name="OTEL_EXPORTER_OTLP_PROTOCOL" value="grpc" />
+        <env name="OTEL_LOGS_EXPORTER" value="otlp" />
+        <env name="OTEL_METRICS_EXPORTER" value="otlp" />
+        <env name="OTEL_RESOURCE_ATTRIBUTES" value="deployment.environment\\=local,service.version\\=1.0.0,team\\=badmintonhub" />
+        <env name="OTEL_SERVICE_NAME" value="GATEWAY-SERVICE" />
+        <env name="OTEL_TRACES_EXPORTER" value="otlp" />
+      </envs>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="gatewayService" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.gatewayservice.GatewayServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NotiServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
+        <env name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4317" />
+        <env name="OTEL_EXPORTER_OTLP_PROTOCOL" value="grpc" />
+        <env name="OTEL_LOGS_EXPORTER" value="otlp" />
+        <env name="OTEL_METRICS_EXPORTER" value="otlp" />
+        <env name="OTEL_RESOURCE_ATTRIBUTES" value="deployment.environment\\=local,service.version\\=1.0.0,team\\=badmintonhub" />
+        <env name="OTEL_SERVICE_NAME" value="NOTI-SERVICE" />
+        <env name="OTEL_TRACES_EXPORTER" value="otlp" />
+      </envs>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="NotiService" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.notiservice.NotiServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrderServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
+        <env name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4317" />
+        <env name="OTEL_EXPORTER_OTLP_PROTOCOL" value="grpc" />
+        <env name="OTEL_LOGS_EXPORTER" value="otlp" />
+        <env name="OTEL_METRICS_EXPORTER" value="otlp" />
+        <env name="OTEL_RESOURCE_ATTRIBUTES" value="deployment.environment\\=local,service.version\\=1.0.0,team\\=badmintonhub" />
+        <env name="OTEL_SERVICE_NAME" value="ORDER-SERVICE" />
+        <env name="OTEL_TRACES_EXPORTER" value="otlp" />
+      </envs>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="orderService" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.orderservice.OrderServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
+        <env name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4317" />
+        <env name="OTEL_EXPORTER_OTLP_PROTOCOL" value="grpc" />
+        <env name="OTEL_LOGS_EXPORTER" value="otlp" />
+        <env name="OTEL_METRICS_EXPORTER" value="otlp" />
+        <env name="OTEL_RESOURCE_ATTRIBUTES" value="deployment.environment\\=local,service.version\\=1.0.0,team\\=badmintonhub" />
+        <env name="OTEL_SERVICE_NAME" value="PRODUCT-SERVICE" />
+        <env name="OTEL_TRACES_EXPORTER" value="otlp" />
+      </envs>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="productService" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.productservice.ProductServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceRegistryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
+        <env name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4317" />
+        <env name="OTEL_EXPORTER_OTLP_PROTOCOL" value="grpc" />
+        <env name="OTEL_LOGS_EXPORTER" value="otlp" />
+        <env name="OTEL_METRICS_EXPORTER" value="otlp" />
+        <env name="OTEL_RESOURCE_ATTRIBUTES" value="deployment.environment\\=local,service.version\\=1.0.0,team\\=badmintonhub" />
+        <env name="OTEL_SERVICE_NAME" value="SERVICE-REGISTRY" />
+        <env name="OTEL_TRACES_EXPORTER" value="otlp" />
+      </envs>
+      <module name="serviceRegistry" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.serviceregistry.ServiceRegistryApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.AuthServiceApplication" />
+      <item itemvalue="Spring Boot.CartServiceApplication" />
+      <item itemvalue="Spring Boot.ConfigServerApplication" />
+      <item itemvalue="Spring Boot.GatewayServiceApplication" />
+      <item itemvalue="Spring Boot.NotiServiceApplication" />
+      <item itemvalue="Spring Boot.OrderServiceApplication" />
+      <item itemvalue="Spring Boot.ProductServiceApplication" />
+      <item itemvalue="Spring Boot.ServiceRegistryApplication" />
+    </list>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -95,6 +275,8 @@
       <workItem from="1755654736931" duration="310000" />
       <workItem from="1755655080365" duration="8000" />
       <workItem from="1757324048148" duration="250000" />
+      <workItem from="1757482346487" duration="3488000" />
+      <workItem from="1757486120627" duration="6030000" />
     </task>
     <servers />
   </component>
