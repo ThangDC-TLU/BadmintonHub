@@ -5,16 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NotiService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/NotiService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NotiService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/NotiService/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/authService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/authService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cartService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/cartService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cartService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cartService/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configServer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/configServer/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/signoz" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/src/AppRoutes/Private.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/src/AppRoutes/Private.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/src/AppRoutes/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/src/AppRoutes/index.tsx" afterDir="false" />
@@ -1760,13 +1756,8 @@
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/src/utils/tokenUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/src/utils/tokenUtils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gatewayService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kafka-docker/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/kafka-docker/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/orderService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orderService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/productService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/signoz" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1811,40 +1802,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.AuthServiceApplication.executor": "Run",
-    "Spring Boot.CartServiceApplication.executor": "Run",
-    "Spring Boot.ConfigServerApplication.executor": "Run",
-    "Spring Boot.GatewayServiceApplication.executor": "Run",
-    "Spring Boot.NotiServiceApplication.executor": "Run",
-    "Spring Boot.OrderServiceApplication.executor": "Run",
-    "Spring Boot.ProductServiceApplication.executor": "Run",
-    "Spring Boot.ServiceRegistryApplication.executor": "Run",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "D:/Project_Java/BadmintonHub",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "run.configurations.included.in.services": "true",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.AuthServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.CartServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ConfigServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.GatewayServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.NotiServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.OrderServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ServiceRegistryApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Project_Java/BadmintonHub&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Project_Java\BadmintonHub\docker" />
@@ -2040,6 +2031,8 @@
       <workItem from="1757324048148" duration="250000" />
       <workItem from="1757482346487" duration="3488000" />
       <workItem from="1757486120627" duration="15707000" />
+      <workItem from="1757503703401" duration="785000" />
+      <workItem from="1757582855606" duration="1634000" />
     </task>
     <servers />
   </component>
