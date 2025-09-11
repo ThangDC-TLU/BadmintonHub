@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NotiService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/NotiService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/authService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cartService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/cartService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configServer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/configServer/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configServer/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configServer/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/src/AppRoutes/Private.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/src/AppRoutes/Private.tsx" afterDir="false" />
@@ -1755,9 +1752,6 @@
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/src/utils/timeUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/src/utils/timeUtils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/src/utils/tokenUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/src/utils/tokenUtils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/signoz/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/docker/signoz/frontend/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gatewayService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orderService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/productService/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -2032,7 +2026,7 @@
       <workItem from="1757482346487" duration="3488000" />
       <workItem from="1757486120627" duration="15707000" />
       <workItem from="1757503703401" duration="785000" />
-      <workItem from="1757582855606" duration="1634000" />
+      <workItem from="1757582855606" duration="4060000" />
     </task>
     <servers />
   </component>

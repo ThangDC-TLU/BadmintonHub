@@ -13,8 +13,23 @@ spring:
           default-label: main
           clone-on-start: true
           force-pull: true
+    bus:
+      destination: springCloudBus
+
+  # ▼ Bus Kafka
+  kafka:
+    bootstrap-servers: localhost:9092
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh,busrefresh
+  endpoint:
+    health:
+      show-details: always
