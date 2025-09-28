@@ -20,6 +20,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="serviceRegistry" />
+        <module name="reviewService" />
         <module name="configServer" />
         <module name="gatewayService" />
         <module name="productService" />
@@ -35,6 +36,7 @@
       <module name="gatewayService" options="-parameters" />
       <module name="orderService" options="-parameters" />
       <module name="productService" options="-parameters" />
+      <module name="reviewService" options="-parameters" />
       <module name="serviceRegistry" options="-parameters" />
     </option>
   </component>

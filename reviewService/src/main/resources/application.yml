@@ -1,0 +1,32 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: REVIEW-SERVICE
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/reviewsdb
+      auto-index-creation: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# chính sách đánh giá
+policy:
+  requirePurchased: true         # bật/tắt “đã mua hàng mới được review”
+  autoModeration:
+    enable: true
+    reportThreshold: 5           # >5 report trong 12h -> chuyển PENDING
+    windowHours: 12
