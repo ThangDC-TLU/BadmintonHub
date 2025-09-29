@@ -9,6 +9,14 @@ spring:
       uri: mongodb://localhost:27017/reviewsdb
       auto-index-creation: true
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    properties:
+      spring.json.add.type.headers: false
+
 eureka:
   client:
     service-url:
@@ -16,17 +24,15 @@ eureka:
 
 management:
   endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
+    web.exposure.include: health,info,metrics
   endpoint:
-    health:
-      show-details: when_authorized
+    health.show-details: when_authorized
 
-# chính sách đánh giá
-policy:
-  requirePurchased: true         # bật/tắt “đã mua hàng mới được review”
-  autoModeration:
-    enable: true
-    reportThreshold: 5           # >5 report trong 12h -> chuyển PENDING
-    windowHours: 12
+review:
+  edit:
+    maxTimes: 1       # sửa tối đa 1 lần
+    windowHours: 48   # trong 48h tính từ createdAt
+
+kafka:
+  topics:
+    productRatingUpdated: product-rating-updated

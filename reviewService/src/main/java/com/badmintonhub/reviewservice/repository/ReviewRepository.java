@@ -1,8 +1,13 @@
 package com.badmintonhub.reviewservice.repository;
 
+import com.badmintonhub.reviewservice.dto.ProductAgg;
 import com.badmintonhub.reviewservice.entity.Review;
-import org.springframework.data.domain.*; import org.springframework.data.mongodb.repository.*; import java.util.*;
+import org.springframework.data.domain.*; import org.springframework.data.mongodb.repository.*;
+import org.springframework.stereotype.Repository;
 
+import java.util.*;
+
+@Repository
 public interface ReviewRepository extends MongoRepository<Review, String> {
     Page<Review> findByProductIdAndStatus(Long productId, String status, Pageable pageable);
     Optional<Review> findByProductIdAndUserId(Long productId, String userId);
@@ -12,5 +17,4 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
             "{ $group: { _id: '$productId', avgRating: { $avg: '$rating' }, count: { $sum: 1 } } }"
     })
     List<ProductAgg> aggProduct(Long productId);
-    interface ProductAgg { String get_id(); Double getAvgRating(); Integer getCount(); }
 }

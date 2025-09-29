@@ -26,6 +26,9 @@ public class Review {
 
     @Indexed private ReviewStatusEnum status = ReviewStatusEnum.APPROVED;
 
+    // chỉnh sửa
+    private int editCount = 0;
+
     @CreatedDate private Instant createdAt;
     @LastModifiedDate private Instant updatedAt;
 }

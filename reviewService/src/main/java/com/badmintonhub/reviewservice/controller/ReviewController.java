@@ -3,7 +3,7 @@ package com.badmintonhub.reviewservice.controller;
 import com.badmintonhub.reviewservice.dto.*; import com.badmintonhub.reviewservice.dto.message.ObjectResponse;
 import com.badmintonhub.reviewservice.service.ReviewService; import com.badmintonhub.reviewservice.utils.ApiMessage;
 import com.badmintonhub.reviewservice.utils.CustomHeaders;
-import jakarta.validation.Valid; import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.*; import org.springframework.web.bind.annotation.*;
 
 @RestController

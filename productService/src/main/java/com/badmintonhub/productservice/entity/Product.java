@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +35,10 @@ public class Product {
     private String thumbnailUrl;
     private int reviewCount;
     private double ratingAverage;
+
+    @Column
+    private Instant ratingUpdatedAt;
+
     private int quantitySold;
     private int quantityStock;
 
