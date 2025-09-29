@@ -48,4 +48,15 @@ public class GatewayFallbackController {
                         "path", req.getURI().getPath(),
                         "timestamp", Instant.now().toString()));
     }
+
+    @GetMapping("/__fallback/review")
+    public ResponseEntity<Map<String,Object>> reviewFallback(ServerHttpRequest req) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(Map.of(
+                        "service", "REVIEW-SERVICE",
+                        "path", req.getPath().toString(),
+                        "message", "Review service is temporarily unavailable"
+                ));
+    }
+
 }

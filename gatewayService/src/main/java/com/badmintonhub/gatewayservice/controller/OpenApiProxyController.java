@@ -44,6 +44,9 @@ public class OpenApiProxyController {
     @GetMapping(value = "/noti", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<String> user() { return forwardAndPatch("http://NOTI-SERVICE/v3/api-docs"); } // nếu user API ở auth-service
 
+    @GetMapping(value = "/review", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<String> review() { return forwardAndPatch("http://REVIEW-SERVICE/v3/api-docs"); } // nếu user API ở auth-service
+
 
     private Mono<String> forwardAndPatch(String uri) {
         return webClientBuilder.build().get().uri(uri).retrieve()

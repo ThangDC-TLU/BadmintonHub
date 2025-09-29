@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/service/ReviewEditPolicy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/ReviewServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/ReviewServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/service/ReviewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/service/ReviewService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/GatewayFallbackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/GatewayFallbackController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/OpenApiProxyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/OpenApiProxyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reviewService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reviewService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +112,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ProductServiceApplication">
+  <component name="RunManager" selected="Spring Boot.ReviewServiceApplication">
     <configuration name="AuthServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <envs>
         <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
@@ -235,6 +237,16 @@
       </method>
     </configuration>
     <configuration name="ReviewServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\\=true" />
+        <env name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4317" />
+        <env name="OTEL_EXPORTER_OTLP_PROTOCOL" value="grpc" />
+        <env name="OTEL_LOGS_EXPORTER" value="otlp" />
+        <env name="OTEL_METRICS_EXPORTER" value="otlp" />
+        <env name="OTEL_RESOURCE_ATTRIBUTES" value="deployment.environment\\\=local,service.version\\\=1.0.0,team\\\=badmintonhub" />
+        <env name="OTEL_SERVICE_NAME" value="REVIEW-SERVICE" />
+        <env name="OTEL_TRACES_EXPORTER" value="otlp" />
+      </envs>
       <module name="reviewService" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.reviewservice.ReviewServiceApplication" />
       <method v="2">
@@ -307,7 +319,7 @@
       <workItem from="1758936376601" duration="2582000" />
       <workItem from="1758980606674" duration="9122000" />
       <workItem from="1759068844123" duration="2106000" />
-      <workItem from="1759124252233" duration="5321000" />
+      <workItem from="1759124252233" duration="8291000" />
     </task>
     <servers />
   </component>

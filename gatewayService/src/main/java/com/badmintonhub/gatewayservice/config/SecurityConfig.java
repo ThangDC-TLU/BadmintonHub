@@ -99,6 +99,15 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.POST, "api/v1/notifications/**").hasAuthority("SCOPE_ADMIN")
                         .pathMatchers(HttpMethod.PUT, "api/v1/notifications/**").hasAuthority("SCOPE_ADMIN")
                         .pathMatchers(HttpMethod.DELETE, "api/v1/notifications/**").hasAuthority("SCOPE_ADMIN")
+
+                        // --- REVIEW-SERVICE ---
+                        // Public xem review/list
+                        .pathMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
+                        // Tạo/Sửa/Xoá review: yêu cầu đăng nhập (user hoặc admin)
+                        .pathMatchers(HttpMethod.POST,   "/api/v1/reviews/**").hasAnyAuthority("SCOPE_USER","SCOPE_ADMIN")
+                        .pathMatchers(HttpMethod.PUT,    "/api/v1/reviews/**").hasAnyAuthority("SCOPE_USER","SCOPE_ADMIN")
+                        .pathMatchers(HttpMethod.DELETE, "/api/v1/reviews/**").hasAnyAuthority("SCOPE_USER","SCOPE_ADMIN")
+
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
