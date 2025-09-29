@@ -5,23 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/config/KafkaConsumerConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/events/ProductRatingUpdated.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/listener/ProductRatingUpdatedListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/config/ReviewEditPolicyProperties.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/dto/ProductAgg.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/events/KafkaRatingEventPublisher.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/events/ProductRatingUpdated.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/service/ReviewAggregationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/service/ReviewEditPolicy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/entity/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/repository/ProductRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/productService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/controller/ReviewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/controller/ReviewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/entity/Review.java" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/entity/Review.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/repository/ReviewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/repository/ReviewRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/ReviewServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/ReviewServiceApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/service/ReviewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/java/com/badmintonhub/reviewservice/service/ReviewService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reviewService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -320,7 +307,7 @@
       <workItem from="1758936376601" duration="2582000" />
       <workItem from="1758980606674" duration="9122000" />
       <workItem from="1759068844123" duration="2106000" />
-      <workItem from="1759124252233" duration="3898000" />
+      <workItem from="1759124252233" duration="5321000" />
     </task>
     <servers />
   </component>

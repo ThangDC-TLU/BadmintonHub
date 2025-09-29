@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class ReviewService {
 
     private final ReviewRepository repo;
     private final ReviewAggregationService aggregationService;
+    private final ReviewEditPolicy editPolicy;
 
 
     public ReviewDTO create(CreateReview req, String userId) {
@@ -53,19 +55,25 @@ public class ReviewService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
+        editPolicy.ensureCanEdit(current);
+
         int oldRating = current.getRating();
 
-        current.setRating(req.rating());
-        current.setTitle(req.title());
-        current.setContent(req.content());
+        boolean changed = false;
+        if (current.getRating() != req.rating()) { current.setRating(req.rating()); changed = true; }
+        if (!Objects.equals(current.getTitle(), req.title())) { current.setTitle(req.title()); changed = true; }
+        if (!Objects.equals(current.getContent(), req.content())) { current.setContent(req.content()); changed = true; }
+
+        if (!changed) return ReviewDTO.from(current);
+
         current.setUpdatedAt(Instant.now());
+        current.setEditCount(current.getEditCount() + 1);
 
         Review saved = repo.save(current);
 
         if (saved.getRating() != oldRating) {
-            aggregationService.recomputeAndPublish(saved.getProductId());  // <-- GỬI KAFKA SAU KHI UPDATE
+            aggregationService.recomputeAndPublish(saved.getProductId());
         }
-
         return ReviewDTO.from(saved);
     }
 
