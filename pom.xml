@@ -41,6 +41,8 @@
         <module>orderService</module>
         <module>productService</module>
         <module>serviceRegistry</module>
+        <module>reviewService</module>
+        <module>inventoryService</module>
     </modules>
 
     <build>

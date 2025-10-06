@@ -5,12 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/config/ModelMapperConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/controller/InventoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/InventoryLevelDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/mapper/InventoryMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/mapper/SkuMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/message/ObjectResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/message/RestResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/request/InventorySetLevelRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/request/SkuBatchUpsertRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/request/SkuUpsertRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/InventoryLevelResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/MaintenanceReleaseResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/ReservationRowResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/SkuDetailResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/SkuResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/StockRowResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/entity/InventoryLevel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/entity/Reservation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/entity/Sku.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/exception/BadRequestException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/exception/NotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/repository/InventoryLevelRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/repository/ReservationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/repository/SkuRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/InventoryQueryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/InventoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/ReservationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/SkuService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/utils/ApiMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/utils/FormatRestResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/utils/ReservationStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/GatewayFallbackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/GatewayFallbackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/OpenApiProxyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gatewayService/src/main/java/com/badmintonhub/gatewayservice/controller/OpenApiProxyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reviewService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reviewService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/reviewService/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +101,7 @@
     &quot;Spring Boot.CartServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.ConfigServerApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.GatewayServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.InventoryServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.NotiServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.OrderServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
@@ -92,6 +123,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.badmintonhub.inventoryservice.service" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Project_Java\BadmintonHub\reviewService\src\main\java\com\badmintonhub\reviewservice\dto" />
     </key>
@@ -112,7 +146,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ReviewServiceApplication">
+  <component name="RunManager" selected="Spring Boot.InventoryServiceApplication">
     <configuration name="AuthServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <envs>
         <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
@@ -171,6 +205,17 @@
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="gatewayService" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.gatewayservice.GatewayServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="InventoryServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="DB_PASSWORD" value="123456" />
+      </envs>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="inventoryService" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.badmintonhub.inventoryservice.InventoryServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -271,6 +316,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Spring Boot.InventoryServiceApplication" />
       <item itemvalue="Spring Boot.ReviewServiceApplication" />
       <item itemvalue="Spring Boot.AuthServiceApplication" />
       <item itemvalue="Spring Boot.CartServiceApplication" />
@@ -319,7 +365,12 @@
       <workItem from="1758936376601" duration="2582000" />
       <workItem from="1758980606674" duration="9122000" />
       <workItem from="1759068844123" duration="2106000" />
-      <workItem from="1759124252233" duration="8291000" />
+      <workItem from="1759124252233" duration="9679000" />
+      <workItem from="1759219993083" duration="3282000" />
+      <workItem from="1759379017927" duration="6489000" />
+      <workItem from="1759537079972" duration="4847000" />
+      <workItem from="1759667593726" duration="6779000" />
+      <workItem from="1759741523376" duration="3301000" />
     </task>
     <servers />
   </component>
