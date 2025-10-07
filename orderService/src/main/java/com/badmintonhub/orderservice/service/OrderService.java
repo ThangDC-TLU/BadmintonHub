@@ -7,6 +7,7 @@ import com.badmintonhub.orderservice.dto.response.OrderResponse;
 import com.badmintonhub.orderservice.entity.Order;
 import com.badmintonhub.orderservice.exception.IdInvalidException;
 import com.badmintonhub.orderservice.utils.constant.OrderStatusEnum;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,4 +36,6 @@ public interface OrderService {
     void cancelPaypalOrder(String paypalOrderId);
 
     OrderResponse capturePaypalOrder(String paypalOrderId);
+
+    void updateOrderStatus(@NotBlank String orderId, OrderStatusEnum orderStatusEnum);
 }

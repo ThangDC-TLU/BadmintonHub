@@ -43,6 +43,7 @@ public class OrderPricingMapper {
                     .order(order)
                     .productId(dto.getProductId())
                     .optionId(dto.getOptionId())
+                    .skuId(dto.getSkuId())
                     .nameSnapshot(dto.getName())
                     .imageSnapshot(dto.getImage())
                     .optionLabelSnapshot(dto.getOptionLabel())

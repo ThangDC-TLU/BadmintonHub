@@ -33,6 +33,9 @@ public class ProductOption {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(unique = true, nullable = false)
+    private Long skuId;
+
     // Ghi de 2 ham equals va hashcode de dam bao tinh dung dan cho ham contains
     // để so sánh name (kiểm tra xem có tồn tại không dựa vào name)
     @Override

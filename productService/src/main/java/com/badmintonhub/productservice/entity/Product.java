@@ -39,9 +39,6 @@ public class Product {
     @Column
     private Instant ratingUpdatedAt;
 
-    private int quantitySold;
-    private int quantityStock;
-
     @Column(unique = true)
     private String productSlug;
 

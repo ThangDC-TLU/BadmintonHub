@@ -5,42 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ea2bf8c-251f-4736-99dc-fd3e73f9a016" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/config/ModelMapperConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/controller/InventoryController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/InventoryLevelDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/mapper/InventoryMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/mapper/SkuMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/message/ObjectResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/message/RestResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/request/InventorySetLevelRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/request/SkuBatchUpsertRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/request/SkuUpsertRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/InventoryLevelResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/MaintenanceReleaseResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/ReservationRowResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/SkuDetailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/SkuResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/response/StockRowResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/entity/InventoryLevel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/entity/Reservation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/entity/Sku.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/exception/BadRequestException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/exception/NotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/repository/InventoryLevelRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/repository/ReservationRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/repository/SkuRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/InventoryQueryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/InventoryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/ReservationService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/SkuService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/utils/ApiMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/utils/FormatRestResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/utils/ReservationStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/config/KafkaConsumerConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/consumer/OrderEventsListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/event/OrderCreatedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/dto/event/OrderItemPayload.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/config/KafkaConsumerConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/consumer/OrderEventConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/dto/event/OrderCompletedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/dto/event/OrderCreatedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/dto/event/OrderItemPayload.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/dto/event/consumer/PaymentCompletedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/producer/OrderEventProducer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cartService/src/main/java/com/badmintonhub/cartservice/dto/model/ProductItemBriefDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/cartService/src/main/java/com/badmintonhub/cartservice/dto/model/ProductItemBriefDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/InventoryQueryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventoryService/src/main/java/com/badmintonhub/inventoryservice/service/InventoryQueryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventoryService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/inventoryService/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/dto/mapper/OrderPricingMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/dto/mapper/OrderPricingMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/dto/model/ProductItemBriefDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/dto/model/ProductItemBriefDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/entity/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/entity/OrderItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/service/impl/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/dto/model/ProductDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/dto/model/ProductDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/dto/model/ProductItemBriefDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/dto/model/ProductItemBriefDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/dto/model/ProductOptionDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/dto/model/ProductOptionDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/dto/response/ProductResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/dto/response/ProductResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/entity/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/entity/ProductOption.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/entity/ProductOption.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/service/impl/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/productService/src/main/java/com/badmintonhub/productservice/service/impl/ProductServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,42 +77,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.AuthServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.CartServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ConfigServerApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GatewayServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.InventoryServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.NotiServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.OrderServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ReviewServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ServiceRegistryApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Project_Java/BadmintonHub/reviewService/src/main/java/com/badmintonhub/reviewservice/dto&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.AuthServiceApplication.executor": "Run",
+    "Spring Boot.CartServiceApplication.executor": "Run",
+    "Spring Boot.ConfigServerApplication.executor": "Run",
+    "Spring Boot.GatewayServiceApplication.executor": "Run",
+    "Spring Boot.InventoryServiceApplication.executor": "Run",
+    "Spring Boot.NotiServiceApplication.executor": "Run",
+    "Spring Boot.OrderServiceApplication.executor": "Run",
+    "Spring Boot.ProductServiceApplication.executor": "Run",
+    "Spring Boot.ReviewServiceApplication.executor": "Run",
+    "Spring Boot.ServiceRegistryApplication.executor": "Run",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "D:/Project_Java/BadmintonHub/reviewService/src/main/java/com/badmintonhub/reviewservice/dto",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "run.configurations.included.in.services": "true",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.badmintonhub.inventoryservice.service" />
@@ -146,7 +140,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.InventoryServiceApplication">
+  <component name="RunManager" selected="Spring Boot.OrderServiceApplication">
     <configuration name="AuthServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <envs>
         <env name="JAVA_TOOL_OPTIONS" value="-javaagent:D:\Project_Java\BadmintonHub\telemetry\opentelemetry-javaagent.jar -Djava.net.useSystemProxies\\=false -Dotel.instrumentation.jdbc.statement-sanitizer.enabled\\=true -Dotel.instrumentation.messaging.experimental.receive-telemetry.enabled\\=true" />
@@ -370,7 +364,9 @@
       <workItem from="1759379017927" duration="6489000" />
       <workItem from="1759537079972" duration="4847000" />
       <workItem from="1759667593726" duration="6779000" />
-      <workItem from="1759741523376" duration="3301000" />
+      <workItem from="1759741523376" duration="3374000" />
+      <workItem from="1759756098442" duration="5464000" />
+      <workItem from="1759840754968" duration="9451000" />
     </task>
     <servers />
   </component>
@@ -379,5 +375,31 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/service/impl/OrderServiceImpl.java</url>
+          <line>94</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/service/impl/OrderServiceImpl.java</url>
+          <line>113</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/service/impl/OrderServiceImpl.java</url>
+          <line>247</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/orderService/src/main/java/com/badmintonhub/orderservice/service/impl/OrderServiceImpl.java</url>
+          <line>257</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

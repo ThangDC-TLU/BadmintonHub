@@ -11,6 +11,7 @@ import java.util.Set;
 @Data
 public class ProductResponseDTO {
     private Long id;
+    private Long skuId;
     private String name;
     private String brand;
     private String description;
@@ -19,8 +20,6 @@ public class ProductResponseDTO {
     private String thumbnailUrl;
     private int reviewCount;
     private double ratingAverage;
-    private int quantitySold;
-    private int quantityStock;
     private String productSlug;
     private String categoryUrl;
     private List<ProductOptionDTO> options;

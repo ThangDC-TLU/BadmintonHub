@@ -1,5 +1,7 @@
 package com.badmintonhub.orderservice.service.impl;
 
+import com.badmintonhub.orderservice.dto.event.OrderCreatedEvent;
+import com.badmintonhub.orderservice.dto.event.OrderItemPayload;
 import com.badmintonhub.orderservice.dto.mapper.OrderMapper;
 import com.badmintonhub.orderservice.dto.mapper.OrderPlacedEventMapper;
 import com.badmintonhub.orderservice.dto.mapper.OrderPricingMapper;
@@ -15,6 +17,7 @@ import com.badmintonhub.orderservice.exception.IdInvalidException;
 import com.badmintonhub.orderservice.paypal.PaypalClient;
 import com.badmintonhub.orderservice.dto.request.PaypalOrderCreateRequest;
 import com.badmintonhub.orderservice.dto.response.PaypalOrderCreateResponse;
+import com.badmintonhub.orderservice.producer.OrderEventProducer;
 import com.badmintonhub.orderservice.repository.OrderRepository;
 import com.badmintonhub.orderservice.service.OrderExternalService;
 import com.badmintonhub.orderservice.service.OrderService;
@@ -52,6 +55,7 @@ public class OrderServiceImpl implements OrderService {
     private final PaypalClient paypalClient;
     private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
     private final OrderExternalService  orderExternalService;
+    private final OrderEventProducer orderEventProducer;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
@@ -60,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
             OrderPricingMapper pricingMapper,
             PaypalClient paypalClient,
             KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate,
-            OrderExternalService orderExternalService)
+            OrderExternalService orderExternalService, OrderEventProducer orderEventProducer)
     {
         this.orderRepository = orderRepository;
         this.fxConverter = fxConverter;
@@ -69,6 +73,7 @@ public class OrderServiceImpl implements OrderService {
         this.paypalClient = paypalClient;
         this.kafkaTemplate = kafkaTemplate;
         this.orderExternalService = orderExternalService;
+        this.orderEventProducer = orderEventProducer;
     }
 
     @Override
@@ -239,6 +244,21 @@ public class OrderServiceImpl implements OrderService {
                 log.info("[CreateOrder][COD][AFTER_COMMIT] sent Kafka event for orderCode={}", response.getOrderCode());
             }
         });
+
+        List<OrderItemPayload> item = order.getItems().stream()
+                .map(oi -> OrderItemPayload.builder()
+                        .skuId(oi.getSkuId())                      // cần có skuId trong OrderItem
+                        .quantity(oi.getQuantity())
+                        .build())
+                .toList();
+
+        OrderCreatedEvent event1 = OrderCreatedEvent.of(
+                order.getOrderCode(),
+                order.getUserId(),
+                order.getGrandTotal(),
+                item);
+
+        orderEventProducer.publishOrderCreatedEvent(event1);
 
         return response;
     }
@@ -451,6 +471,11 @@ public class OrderServiceImpl implements OrderService {
         }
         order = orderRepository.save(order);
         return orderMapper.toResponse(order);
+    }
+
+    @Override
+    public void updateOrderStatus(String orderId, OrderStatusEnum orderStatusEnum) {
+
     }
 
 

@@ -84,6 +84,7 @@ public class ProductServiceImpl implements ProductService {
         if (productDTO.getOptions() != null) {
             for (ProductOptionDTO optionDTO : productDTO.getOptions()) {
                 ProductOption option = new ProductOption();
+                option.setSkuId(optionDTO.getSkuId());
                 option.setName(optionDTO.getName());
                 option.setValue(optionDTO.getValue());
                 option.setAddPrice(optionDTO.getAddPrice());
@@ -139,10 +140,6 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setReviewCount(productDTO.getReviewCount());
         existingProduct.setRatingAverage(productDTO.getRatingAverage());
 
-        // Số lượng tồn kho và đã bán
-        existingProduct.setQuantityStock(productDTO.getQuantityStock());
-        existingProduct.setQuantitySold(productDTO.getQuantitySold());
-
         // Xử lý Category (nếu có categoryUrl)
         if (productDTO.getCategoryUrl() != null && !productDTO.getCategoryUrl().isBlank()) {
             String categoryUrl = SlugConvert.convert(productDTO.getCategoryUrl());
@@ -157,7 +154,8 @@ public class ProductServiceImpl implements ProductService {
             List<ProductOption> optionEntities = productDTO.getOptions().stream()
                     .map(optDTO -> {
                         ProductOption option = new ProductOption();
-                        option.setId(optDTO.getId()); // Nếu update option cũ
+                        option.setId(optDTO.getId());
+                        option.setSkuId(optDTO.getSkuId());
                         option.setName(optDTO.getName());
                         option.setValue(optDTO.getValue());
                         option.setAddPrice(optDTO.getAddPrice());
@@ -237,6 +235,7 @@ public class ProductServiceImpl implements ProductService {
         ProductItemBriefDTO dto = new ProductItemBriefDTO();
         dto.setProductId(p.getId());
         dto.setOptionId(o.getId());
+        dto.setSkuId(o.getSkuId());
         dto.setName(p.getName());
         dto.setImage(p.getThumbnailUrl());
         dto.setProductSlug(p.getProductSlug());
@@ -271,7 +270,6 @@ public class ProductServiceImpl implements ProductService {
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() ->  new ResourceNotFoundException("Product","productId", productId));
 
-        existingProduct.setQuantityStock(quantity);
         Product saved = productRepository.save(existingProduct);
         return productMapper.mapToResponse(saved);
     }

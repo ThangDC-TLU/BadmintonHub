@@ -7,7 +7,7 @@ import lombok.Data;
 public class ProductItemBriefDTO {
     private Long productId;
     private Long optionId;
-
+    private Long skuId;
     private String name;           // tên sản phẩm
     private String image;          // thumbnail
     private String productSlug;

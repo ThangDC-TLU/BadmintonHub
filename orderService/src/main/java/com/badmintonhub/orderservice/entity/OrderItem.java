@@ -1,6 +1,7 @@
 package com.badmintonhub.orderservice.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -29,6 +30,10 @@ public class OrderItem {
     private Long productId;
     private Long optionId;
 
+    @NotNull
+    @Column(nullable = false)
+    private Long skuId;
+
     /** Snapshot hiển thị từ ProductItemBriefDTO */
     private String nameSnapshot;          // = dto.getName()
     private String imageSnapshot;         // = dto.getImage()
@@ -36,7 +41,7 @@ public class OrderItem {
 
     /** Số lượng */
     @Builder.Default
-    private Integer quantity = 0;
+    private Integer quantity = 1;
 
     /** ĐƠN GIÁ (snapshot) */
     @Builder.Default
